@@ -71,10 +71,34 @@ function validateForm(data: ContactFormData): FormErrors {
   return errors;
 }
 
-function formAction(
+async function formAction(
   prevState: ContactSubmissionResult | null,
   formData: FormData
 ): Promise<ContactSubmissionResult> {
+  if (formData.get("reset") === "true") {
+    return { success: false, message: "" };
+  }
+
+  const rawData: ContactFormData = {
+    name: (formData.get("name") as string) || "",
+    email: (formData.get("email") as string) || "",
+    projectType: (formData.get("projectType") as string) || "",
+    budget: (formData.get("budget") as string) || "",
+    timeline: (formData.get("timeline") as string) || "",
+    company: (formData.get("company") as string) || "",
+    referenceUrl: (formData.get("referenceUrl") as string) || "",
+    description: (formData.get("description") as string) || "",
+  };
+
+  const clientErrors = validateForm(rawData);
+  if (Object.keys(clientErrors).length > 0) {
+    return {
+      success: false,
+      message: "Validation failed",
+      errors: clientErrors as Record<string, string>,
+    };
+  }
+
   return submitContactForm(formData);
 }
 
@@ -82,7 +106,6 @@ export function ContactForm() {
   const [formData, setFormData] = useState<ContactFormData>(INITIAL_FORM_DATA);
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [status, setStatus] = useState<FormStatus>("idle");
   const [serverErrors, setServerErrors] = useState<Record<string, string>>({});
 
   const [actionState, actionDispatch, isPending] = useActionState(formAction, null);
@@ -108,47 +131,15 @@ export function ContactForm() {
     setErrors(newErrors);
   }, [formData]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const newErrors = validateForm(formData);
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setTouched({
-        name: true,
-        email: true,
-        projectType: true,
-        description: true,
-        referenceUrl: true,
-      });
-      return;
-    }
-
-    setStatus("submitting");
-    setServerErrors({});
-
-    const fd = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      fd.append(key, value);
-    });
-
-    actionDispatch(fd);
-  };
-
   const getFieldError = (field: keyof FormErrors) => {
     return serverErrors[field] || (touched[field] ? errors[field] : undefined);
   };
 
-  const isSubmitting = isPending || status === "submitting";
+  const isSubmitting = isPending;
   const isSuccess = actionState?.success === true;
   const isError = actionState?.success === false;
 
   if (isSuccess) {
-    setStatus("success");
-    setFormData(INITIAL_FORM_DATA);
-    setTouched({});
-    setErrors({});
-    setServerErrors({});
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -176,7 +167,14 @@ export function ContactForm() {
         </p>
         <motion.button
           onClick={() => {
-            setStatus("idle");
+            setFormData(INITIAL_FORM_DATA);
+            setTouched({});
+            setErrors({});
+            setServerErrors({});
+            // Reset actionState by dispatching a new FormData with a reset flag
+            const resetData = new FormData();
+            resetData.set("reset", "true");
+            actionDispatch(resetData);
           }}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-colors"
           style={{ background: "var(--primary)", color: "var(--on-primary)" }}
@@ -193,21 +191,12 @@ export function ContactForm() {
   }
 
   if (isError && actionState) {
-    setStatus("error");
-    if (actionState.errors) {
-      setServerErrors(actionState.errors);
-      setTouched({
-        name: true,
-        email: true,
-        projectType: true,
-        description: true,
-        referenceUrl: true,
-      });
-    }
+    // Show error inline in form - server errors will be shown via getFieldError
+    // The form below will render with serverErrors populated
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-6" aria-label="Project inquiry form">
+    <form action={actionDispatch} noValidate className="space-y-6" aria-label="Project inquiry form">
       <AnimatePresence mode="popLayout">
         {!isSubmitting && !isSuccess && (
           <motion.div
@@ -228,6 +217,7 @@ export function ContactForm() {
                 error={getFieldError("name")}
                 required
                 autoComplete="name"
+                name="name"
               />
               <ContactField
                 label="Email"
@@ -239,6 +229,7 @@ export function ContactForm() {
                 error={getFieldError("email")}
                 required
                 autoComplete="email"
+                name="email"
               />
             </div>
 
@@ -247,6 +238,7 @@ export function ContactForm() {
               onChange={(value) => handleChange("projectType", value)}
               error={getFieldError("projectType")}
               disabled={isSubmitting || isSuccess}
+              name="projectType"
             />
 
             <ContactTextarea
@@ -259,6 +251,7 @@ export function ContactForm() {
               required
               rows={5}
               hint="The more detail you share, the better we can prepare for our first conversation."
+              name="description"
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -289,6 +282,7 @@ export function ContactForm() {
                 onChange={(e) => handleChange("company", e.target.value)}
                 onBlur={() => handleBlur("company")}
                 autoComplete="organization"
+                name="company"
               />
               <ContactField
                 label="Reference URL (optional)"
@@ -300,6 +294,7 @@ export function ContactForm() {
                 error={getFieldError("referenceUrl")}
                 autoComplete="url"
                 hint="Existing site, competitor, or inspiration reference"
+                name="referenceUrl"
               />
             </div>
           </motion.div>

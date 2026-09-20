@@ -8,9 +8,10 @@ interface ProjectTypeSelectorProps {
   onChange: (value: string) => void;
   error?: string;
   disabled?: boolean;
+  name?: string;
 }
 
-export function ProjectTypeSelector({ value, onChange, error, disabled }: ProjectTypeSelectorProps) {
+export function ProjectTypeSelector({ value, onChange, error, disabled, name = "projectType" }: ProjectTypeSelectorProps) {
   const options = [
     { value: "", label: "Select project type" },
     ...services.map((s) => ({ value: s.title, label: s.title })),
@@ -29,6 +30,7 @@ export function ProjectTypeSelector({ value, onChange, error, disabled }: Projec
       <div className="relative">
         <motion.select
           id="project-type"
+          name={name}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           disabled={disabled}

@@ -1,0 +1,494 @@
+@import "tailwindcss";
+
+/* SKY BUILDS design tokens — approved v5 "Blueprint x Creative Energy".
+   This supersedes the earlier v3 (aurora) values. Do not hand-edit
+   without updating docs/DESIGN-SYSTEM.md to match. */
+
+:root {
+  --bg: #120e1f;
+  --bg-2: #17122a;
+  --surface: #1e1836;
+  --surface-elevated: #271f45;
+  --text: #f5f1ec;
+  --text-muted: #948bae;
+  --border: rgba(245, 241, 236, 0.08);
+  --grid-line: rgba(91, 120, 255, 0.07);
+  --primary: #5b78ff;
+  --secondary: #ff5da2;
+  --accent: #ffc15c;
+  --success: #4ade9a;
+  /* Text-on-primary-button color, chosen per theme so it clears
+     WCAG AA (4.5:1) — the earlier hardcoded #F5F1EC only passed in
+     light mode (5.45:1); against dark mode's lighter indigo it was
+     3.35:1, a real contrast failure caught by computing actual
+     ratios rather than eyeballing it. */
+  --on-primary: #120e1f;
+  --glass-bg: rgba(30, 24, 54, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --shadow-tint: 91, 120, 255;
+
+  --radius-lg: 18px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --t-subtle: 0.6s;
+  --t-medium: 0.85s;
+  --t-strong: 1.2s;
+
+  /* Loaded via <link> stylesheets in layout.tsx, not next/font,
+     so builds don't depend on network access to a font CDN. */
+  --font-bricolage: "Bricolage Grotesque", sans-serif;
+  --font-general-sans: "General Sans", -apple-system, sans-serif;
+}
+
+[data-theme="light"] {
+  --bg: #f7f1ea;
+  --bg-2: #f0e8de;
+  --surface: #fbf7f1;
+  --surface-elevated: #efe6d8;
+  --text: #211a2e;
+  --text-muted: #7a6e78;
+  --border: rgba(33, 26, 46, 0.1);
+  --grid-line: rgba(52, 82, 224, 0.06);
+  --primary: #3452e0;
+  --secondary: #e23f87;
+  --accent: #f2a93b;
+  --success: #2e9f6e;
+  --on-primary: #f5f1ec;
+  --glass-bg: rgba(247, 241, 234, 0.6);
+  --glass-border: rgba(33, 26, 46, 0.08);
+  --shadow-tint: 52, 82, 224;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-success: var(--success);
+
+  --font-display: var(--font-bricolage);
+  --font-body: var(--font-general-sans);
+
+  --radius-lg: var(--radius-lg);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  overflow-x: hidden;
+}
+body {
+  overflow-x: hidden;
+}
+
+/* Consistent, intentional focus ring — previously relied on browser
+   defaults, which look mismatched against a dark, colorful UI. */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body), -apple-system, sans-serif;
+  transition:
+    background 0.4s var(--ease),
+    color 0.4s var(--ease);
+}
+
+/* Gradient accent word — one per major heading, per the approved
+   restraint rule (see docs/DESIGN-SYSTEM.md). */
+.grad-word {
+  background: linear-gradient(100deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 200% 100%;
+  animation: shimmer 6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .grad-word {
+    animation: none;
+  }
+}
+@keyframes shimmer {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Faint blueprint grid — hero backdrop + Process only, never global. */
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 46px 46px;
+  -webkit-mask-image: radial-gradient(ellipse 75% 55% at 50% 30%, black 35%, transparent 100%);
+  mask-image: radial-gradient(ellipse 75% 55% at 50% 30%, black 35%, transparent 100%);
+}
+
+/* Corner registration marks — used in exactly two places on the
+   homepage (one hero shard, the CTA block). Do not add more without
+   revisiting docs/DESIGN-SYSTEM.md's restraint rule. */
+.corner-marks {
+  position: relative;
+}
+.corner-marks .cm-tl,
+.corner-marks .cm-br {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: var(--accent);
+  opacity: 0.9;
+}
+.corner-marks .cm-tl {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+.corner-marks .cm-br {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+}
+
+/* Hero entrance animations (strong motion tier) */
+@keyframes rise-in {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.animate-rise-in {
+  animation: rise-in 0.85s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ================================================
+   Hero card wave animation (dedicated CSS keyframes,
+   independent of Framer Motion — see FloatingCard.tsx)
+   ================================================ */
+@keyframes hero-card-wave {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(var(--hero-base-rotate, 0deg));
+  }
+  25% {
+    transform: translate3d(0, calc(var(--hero-float-range, 8px) * -0.55), 0)
+      rotate(var(--hero-mid-rotate, var(--hero-base-rotate, 0deg)));
+  }
+  50% {
+    transform: translate3d(0, calc(var(--hero-float-range, 8px) * -1), 0)
+      rotate(var(--hero-base-rotate, 0deg));
+  }
+  75% {
+    transform: translate3d(0, calc(var(--hero-float-range, 8px) * -0.45), 0)
+      rotate(var(--hero-mid-rotate, var(--hero-base-rotate, 0deg)));
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(var(--hero-base-rotate, 0deg));
+  }
+}
+
+.hero-card-wave {
+  animation-name: hero-card-wave;
+  animation-duration: var(--hero-wave-duration, 6.5s);
+  animation-delay: var(--hero-wave-delay, 0s);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-card-wave {
+    animation: none;
+    transform: none;
+  }
+}
+@keyframes glow-drift {
+  0%,
+  100% {
+    transform: translate(-4%, -3%) scale(1);
+  }
+  50% {
+    transform: translate(4%, 3%) scale(1.08);
+  }
+}
+.animate-glow-drift {
+  animation: glow-drift 16s ease-in-out infinite;
+}
+
+@keyframes orbit-travel {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -280;
+  }
+}
+.orbit-light-travel {
+  animation: orbit-travel 7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-glow-drift,
+  .orbit-light-travel {
+    animation: none;
+  }
+}
+
+/* Hero geometric background shapes */
+.hero-shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  animation: hero-shape-float 20s ease-in-out infinite;
+}
+.hero-shape-1 {
+  width: 400px;
+  height: 400px;
+  top: -100px;
+  right: -100px;
+  background: var(--primary);
+  animation-delay: 0s;
+}
+.hero-shape-2 {
+  width: 300px;
+  height: 300px;
+  bottom: 20%;
+  left: -50px;
+  background: var(--secondary);
+  animation-delay: -7s;
+}
+.hero-shape-3 {
+  width: 250px;
+  height: 250px;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  animation-delay: -14s;
+}
+
+@keyframes hero-shape-float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -20px) scale(1.05);
+  }
+  66% {
+    transform: translate(-20px, 30px) scale(0.95);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-shape {
+    animation: none;
+  }
+}
+
+/* Slow bounce animation for scroll indicator */
+@keyframes bounce-slow {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-8px);
+  }
+  60% {
+    transform: translateY(-4px);
+  }
+}
+.animate-bounce-slow {
+  animation: bounce-slow 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-bounce-slow {
+    animation: none;
+  }
+}
+
+/* Ping animation for live indicator */
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+.animate-ping {
+  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ping {
+    animation: none;
+  }
+}
+
+/* Hero visual enhancements */
+/* Floating particles */
+.hero-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--primary);
+  opacity: 0.4;
+  animation: hero-particle-float 4s ease-in-out infinite;
+}
+.hero-particle:nth-child(odd) {
+  background: var(--secondary);
+}
+.hero-particle:nth-child(3n) {
+  background: var(--accent);
+}
+
+@keyframes hero-particle-float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.4;
+  }
+  25% {
+    transform: translate(15px, -10px) scale(1.2);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-10px, 15px) scale(0.8);
+    opacity: 0.3;
+  }
+  75% {
+    transform: translate(-15px, -10px) scale(1.1);
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-particle {
+    animation: none;
+  }
+}
+
+/* Hero stat cards */
+.hero-stat-card,
+.hero-stat-card-wide,
+.hero-metrics-card,
+.hero-tech-card {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.hero-stat-card {
+  min-width: 120px;
+}
+
+.hero-stat-card-wide {
+  min-width: 150px;
+}
+
+.hero-metrics-card {
+  padding: 10px 12px;
+}
+
+.hero-tech-card {
+  padding: 10px 12px;
+  min-width: 110px;
+}
+
+.hero-tech-badge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  transition: all 0.2s var(--ease);
+}
+
+.hero-tech-badge:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--on-primary);
+}
+
+/* Enhanced FloatingCard hover effect */
+.hero-card-wave > div {
+  transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+}
+
+.group:hover .hero-card-wave > div {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 60px -20px rgba(var(--shadow-tint), 0.3);
+}
+
+/* "Why SKY BUILDS" cards — pure CSS hover (no client JS needed),
+   parameterized per-instance via --why-accent-a/-b custom properties,
+   same pattern as the hero's --hero-* wave variables. */
+.why-card {
+  transition:
+    transform 0.4s var(--ease),
+    border-color 0.4s var(--ease);
+}
+.why-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--why-accent-a, var(--primary));
+}
+.why-card .why-swatch {
+  width: 0;
+  opacity: 0;
+  transition:
+    width 0.3s var(--ease),
+    opacity 0.3s var(--ease);
+  background: linear-gradient(135deg, var(--why-accent-a, var(--primary)), var(--why-accent-b, var(--accent)));
+}
+.why-card:hover .why-swatch {
+  width: 28px;
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .why-card,
+  .why-card:hover,
+  .why-card .why-swatch {
+    transition: none;
+    transform: none;
+  }
+}

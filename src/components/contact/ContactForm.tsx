@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ContactField, ContactTextarea } from "./ContactField";
 import { ProjectTypeSelector } from "./ProjectTypeSelector";
 import { BudgetSelector, TimelineSelector } from "./ChipSelector";
-import { submitContactForm, type ContactSubmissionResult } from "@/app/contact/actions";
+import { submitContactForm, type ContactSubmissionResult } from "@/app/(public)/contact/actions";
 
 export type FormStatus = "idle" | "validating" | "submitting" | "success" | "error";
 

@@ -87,7 +87,7 @@ export function AdminServiceForm({ mode, initialData }: AdminServiceFormProps) {
             Back to Services
           </Link>
           <h1 className="font-display text-[clamp(1.75rem,3vw,2.5rem)] font-bold" style={{ color: "var(--text)" }}>
-            {isCreate ? "New Service" : "Edit Service"}
+              {isCreate ? "Add Service" : "Edit Service"}
           </h1>
         </div>
       </div>
@@ -122,7 +122,7 @@ export function AdminServiceForm({ mode, initialData }: AdminServiceFormProps) {
                   Saving…
                 </>
               ) : isCreate ? (
-                "Create Service"
+                "Add Service"
               ) : (
                 "Save Changes"
               )}

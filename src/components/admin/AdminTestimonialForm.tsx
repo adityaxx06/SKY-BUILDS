@@ -98,7 +98,7 @@ export function AdminTestimonialForm({ mode, initialData }: AdminTestimonialForm
             Back to Testimonials
           </Link>
           <h1 className="font-display text-[clamp(1.75rem,3vw,2.5rem)] font-bold" style={{ color: "var(--text)" }}>
-            {isCreate ? "New Testimonial" : "Edit Testimonial"}
+              {isCreate ? "Add Testimonial" : "Edit Testimonial"}
           </h1>
         </div>
       </div>
@@ -134,7 +134,7 @@ export function AdminTestimonialForm({ mode, initialData }: AdminTestimonialForm
                   Saving…
                 </>
               ) : isCreate ? (
-                "Create Testimonial"
+                "Add Testimonial"
               ) : (
                 "Save Changes"
               )}

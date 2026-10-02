@@ -23,8 +23,8 @@ const QUICK_ACTIONS: QuickAction[] = [
   },
   {
     href: "/admin/projects",
-    label: "Manage Projects",
-    description: "Add, edit, or remove portfolio projects",
+    label: "Manage Selected Work",
+    description: "Add, edit, or remove selected work",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
         <rect x="3" y="3" width="18" height="18" rx="2" />

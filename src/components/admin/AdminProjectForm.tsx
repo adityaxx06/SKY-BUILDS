@@ -69,14 +69,14 @@ export function AdminProjectForm({ mode, initialData }: AdminProjectFormProps) {
       const response = await fetch(`/admin/projects/api`, { method: "POST", body: formData });
       const data = await response.json();
       if (!response.ok || !data.success) {
-        setSubmitError(data.error || "Failed to save project");
+        setSubmitError(data.error || "Failed to save work");
         setIsSaving(false);
         return;
       }
       router.push(`/admin/projects/${data.id}`);
       router.refresh();
     } catch {
-      setSubmitError("Failed to save project");
+      setSubmitError("Failed to save work");
       setIsSaving(false);
     }
   };
@@ -87,10 +87,10 @@ export function AdminProjectForm({ mode, initialData }: AdminProjectFormProps) {
         <div>
           <Link href="/admin/projects" className="inline-flex items-center gap-2 text-sm font-medium mb-4 transition-colors hover:underline" style={{ color: "var(--primary)" }}>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-            Back to Projects
+            Back to Selected Work
           </Link>
           <h1 className="font-display text-[clamp(1.75rem,3vw,2.5rem)] font-bold" style={{ color: "var(--text)" }}>
-            {isCreate ? "New Project" : "Edit Project"}
+            {isCreate ? "Add Work" : "Edit Work"}
           </h1>
         </div>
       </div>
@@ -99,7 +99,7 @@ export function AdminProjectForm({ mode, initialData }: AdminProjectFormProps) {
         {initialData && <input type="hidden" name="id" value={initialData.id} />}
         <div className="rounded-[18px] border p-6" style={{ borderColor: "var(--border)", background: "var(--surface)" }}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <AdminInput label="Title" name="title" defaultValue={initialData?.title} error={errors.title} required placeholder="Project title" />
+            <AdminInput label="Title" name="title" defaultValue={initialData?.title} error={errors.title} required placeholder="Work title" />
             <AdminInput label="Slug" name="slug" defaultValue={initialData?.slug} error={errors.slug} required placeholder="url-friendly-slug" />
             <AdminInput label="Category" name="category" defaultValue={initialData?.category} error={errors.category} required placeholder="e.g., SaaS · Web app" />
             <AdminInput label="Year" name="year" type="number" defaultValue={initialData?.year} error={errors.year} placeholder="2026" />
@@ -113,14 +113,14 @@ export function AdminProjectForm({ mode, initialData }: AdminProjectFormProps) {
             <h3 className="font-display text-lg font-semibold mb-4" style={{ color: "var(--text)" }}>Descriptions</h3>
             <div className="space-y-4">
               <AdminTextarea label="Short Description" name="short_description" defaultValue={initialData?.short_description} rows={3} placeholder="Brief summary for cards/previews" />
-              <AdminTextarea label="Full Description" name="description" defaultValue={initialData?.description} rows={5} placeholder="Full project description" />
+              <AdminTextarea label="Full Description" name="description" defaultValue={initialData?.description} rows={5} placeholder="Full work description" />
             </div>
           </div>
 
           <div className="mt-6">
             <h3 className="font-display text-lg font-semibold mb-4" style={{ color: "var(--text)" }}>Challenge / Solution / Result</h3>
             <div className="space-y-4">
-              <AdminTextarea label="Challenge" name="challenge" defaultValue={initialData?.challenge} rows={4} placeholder="What problem did this project solve?" />
+              <AdminTextarea label="Challenge" name="challenge" defaultValue={initialData?.challenge} rows={4} placeholder="What problem did this work solve?" />
               <AdminTextarea label="Solution" name="solution" defaultValue={initialData?.solution} rows={4} placeholder="How did you approach and solve it?" />
               <AdminTextarea label="Result Summary" name="result_summary" defaultValue={initialData?.result_summary} rows={3} placeholder="Key outcomes and results" />
             </div>
@@ -148,7 +148,7 @@ export function AdminProjectForm({ mode, initialData }: AdminProjectFormProps) {
                   Saving…
                 </>
               ) : isCreate ? (
-                "Create Project"
+                "Add Work"
               ) : (
                 "Save Changes"
               )}

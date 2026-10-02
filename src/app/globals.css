@@ -228,6 +228,9 @@ body {
   .cg-reveal {
     --cg-r: 200px;
   }
+  .cg-glow {
+    --cg-glow-size: 260px;
+  }
 }
 
 /* Faint blueprint grid — hero backdrop + Process only, never global. */

@@ -188,38 +188,13 @@ body {
 
 :root {
   --cg-line-base: color-mix(in srgb, var(--primary) 4%, transparent);
-  --cg-line-reveal: color-mix(in srgb, var(--primary) 15%, transparent);
-  --cg-glow-color: color-mix(in srgb, var(--primary) 10%, transparent);
+  --cg-line-reveal: color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
 /* Light theme: even fainter — never graph paper. */
 [data-theme="light"] {
   --cg-line-base: color-mix(in srgb, var(--primary) 3%, transparent);
-  --cg-line-reveal: color-mix(in srgb, var(--primary) 11%, transparent);
-  --cg-glow-color: color-mix(in srgb, var(--primary) 8%, transparent);
-}
-
-/* Soft accent glow riding the same eased cursor position.
-   Transform-only movement (compositor thread), fades with the reveal. */
-.cg-glow {
-  --cg-glow-size: 360px;
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: var(--cg-glow-size);
-  height: var(--cg-glow-size);
-  margin-left: calc(var(--cg-glow-size) / -2);
-  margin-top: calc(var(--cg-glow-size) / -2);
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  will-change: transform;
-  background: radial-gradient(
-    circle,
-    var(--cg-glow-color) 0%,
-    transparent 65%
-  );
+  --cg-line-reveal: color-mix(in srgb, var(--primary) 14%, transparent);
 }
 
 /* Tablet and below: smaller, calmer reveal radius. Touch devices never
@@ -227,9 +202,6 @@ body {
 @media (max-width: 1024px) {
   .cg-reveal {
     --cg-r: 200px;
-  }
-  .cg-glow {
-    --cg-glow-size: 260px;
   }
 }
 

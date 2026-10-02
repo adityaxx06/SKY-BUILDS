@@ -84,28 +84,6 @@ export function ServicesHero() {
           </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 1.2, delay: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
-          className="absolute bottom-0 left-1/2 hidden w-full max-w-4xl -translate-x-1/2 md:block pointer-events-none"
-          aria-hidden
-        >
-          <div className="flex items-center justify-center gap-8 md:gap-16 px-4">
-            {services.map((service) => (
-              <div key={service.id} className="flex flex-col items-center gap-2 opacity-60">
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${service.swatch[0]}20, ${service.swatch[1]}20)`, border: "1px solid var(--border)" }}>
-                  <ServiceVisualSmall serviceId={service.id} />
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: `linear-gradient(135deg, ${service.swatch[0]}, ${service.swatch[1]})` }} />
-                </div>
-                <span className="text-[0.6875rem] font-medium tracking-wider text-center max-w-[80px]" style={{ color: "var(--text-muted)" }}>
-                  {service.title}
-                </span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </header>
   );

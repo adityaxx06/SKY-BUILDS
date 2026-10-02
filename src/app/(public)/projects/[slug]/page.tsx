@@ -37,7 +37,7 @@ function ProjectVisualGallery({ project }: { project: Project }) {
   const mockups = MOCKUP_COMPONENTS[project.id] || {};
 
   return (
-    <section aria-labelledby="gallery-heading" className="py-16 md:py-24">
+    <section aria-label="Project visual gallery" className="py-16 md:py-24">
       <div className="space-y-16">
         {project.gallery.map((item, index) => {
           const Mockup = mockups[item.type];

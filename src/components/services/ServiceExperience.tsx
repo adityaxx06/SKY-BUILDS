@@ -237,7 +237,7 @@ export function ServiceExperience({ services: servicesList }: { services: Servic
       <div className="max-w-6xl mx-auto px-6 md:px-10">
         <Reveal>
           <div className="text-center max-w-3xl mx-auto">
-            <p className="font-display text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-4">
+            <p id="services-heading" className="font-display text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-4">
               Our capabilities
             </p>
             <p className="max-w-2xl mx-auto" style={{ color: "var(--text-muted)" }}>

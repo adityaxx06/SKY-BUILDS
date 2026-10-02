@@ -11,9 +11,9 @@ export function WhySkyBuilds() {
   return (
     <Container as="section" id="why" className="py-24">
       <Reveal>
-        <p className="mb-5 text-[0.8125rem] font-medium" style={{ color: "var(--text-muted)" }}>
+        <h2 className="mb-5 text-[0.8125rem] font-medium" style={{ color: "var(--text-muted)" }}>
           Why SKY BUILDS
-        </p>
+        </h2>
       </Reveal>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {whyItems.map((item, i) => (

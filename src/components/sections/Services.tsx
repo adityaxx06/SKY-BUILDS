@@ -7,9 +7,9 @@ export function Services() {
   return (
     <Container as="section" id="services" className="py-24 scroll-mt-20">
       <Reveal>
-        <p className="mb-5 text-[0.8125rem] font-medium" style={{ color: "var(--text-muted)" }}>
+        <h2 className="mb-5 text-[0.8125rem] font-medium" style={{ color: "var(--text-muted)" }}>
           Services
-        </p>
+        </h2>
         <div className="border-t" style={{ borderColor: "var(--border)" }}>
           {services.map((service) => (
             <ServiceItem key={service.id} service={service} />

@@ -25,9 +25,9 @@ export default async function AdminProjectsPage({
 
   return (
     <AdminPage
-      title="Projects"
-      description={`Manage portfolio projects. ${dashboardData.projectsCount} total`}
-      action={{ label: "New Project", href: "/admin/projects/new" }}
+      title="Selected Work"
+      description={`Manage selected work. ${dashboardData.projectsCount} total`}
+      action={{ label: "Add Work", href: "/admin/projects/new" }}
     >
       <ProjectList
         initialProjects={data.projects}

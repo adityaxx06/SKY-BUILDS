@@ -44,7 +44,7 @@ export default async function AdminDashboardPage() {
           </Link>
           <Link href="/admin/projects" className="block">
             <AdminStatCard
-              label="Projects"
+              label="Selected Work"
               value={data.projectsCount}
               icon={
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6">

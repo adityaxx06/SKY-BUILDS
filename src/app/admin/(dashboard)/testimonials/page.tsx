@@ -27,7 +27,7 @@ export default async function AdminTestimonialsPage({
     <AdminPage
       title="Testimonials"
       description={`Manage client testimonials. ${dashboardData.testimonialsCount} total`}
-      action={{ label: "New Testimonial", href: "/admin/testimonials/new" }}
+      action={{ label: "Add Testimonial", href: "/admin/testimonials/new" }}
     >
       <AdminTestimonialList
         initialTestimonials={data.testimonials}

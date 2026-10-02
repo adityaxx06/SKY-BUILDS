@@ -27,7 +27,7 @@ export default async function AdminServicesPage({
     <AdminPage
       title="Services"
       description={`Manage service offerings. ${dashboardData.servicesCount} total`}
-      action={{ label: "New Service", href: "/admin/services/new" }}
+      action={{ label: "Add Service", href: "/admin/services/new" }}
     >
       <ServiceList
         initialServices={data.services}

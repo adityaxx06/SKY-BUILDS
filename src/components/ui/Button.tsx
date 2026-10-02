@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRef } from "react";
 import type { ReactNode } from "react";
 
@@ -39,8 +40,10 @@ export function Button({
 
   const isPrimary = variant === "primary";
 
+  // Next.js Link keeps route changes client-side (PageTransition keeps
+  // working); hash-only and mailto: hrefs pass through natively.
   return (
-    <a
+    <Link
       ref={ref}
       href={href}
       onMouseMove={handleMouseMove}
@@ -66,6 +69,6 @@ export function Button({
           <path d="M7 17L17 7M17 7H7M17 7V17" />
         </svg>
       )}
-    </a>
+    </Link>
   );
 }

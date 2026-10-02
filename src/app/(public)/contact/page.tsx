@@ -1,17 +1,18 @@
 import { Metadata } from "next";
+import { canonicalAlternates, openGraphPage } from "@/lib/seo/site";
 import { ContactHero } from "@/components/contact/ContactHero";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { WhatHappensNext } from "@/components/contact/WhatHappensNext";
 import { CTA } from "@/components/sections/CTA";
 
 export const metadata: Metadata = {
-  title: "Contact — SKY BUILDS",
+  title: "Contact",
   description: "Start a project inquiry. Websites, web applications, redesigns, e-commerce, and UI/UX design. Tell us about your idea and we&rsquo;ll help you shape it.",
-  openGraph: {
-    title: "Contact — SKY BUILDS",
-    description: "Start a project inquiry. Websites, web applications, redesigns, e-commerce, and UI/UX design.",
-    type: "website",
-  },
+  ...openGraphPage(
+    "Contact — SKY BUILDS",
+    "Start a project inquiry. Websites, web applications, redesigns, e-commerce, and UI/UX design."
+  ),
+  ...canonicalAlternates("/contact"),
 };
 
 export default function ContactPage() {
@@ -26,9 +27,9 @@ export default function ContactPage() {
               <div className="relative">
                 <div className="sticky top-24 space-y-8">
                   <div>
-                    <p id="inquiry-heading" className="font-display text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-4">
+                    <h2 id="inquiry-heading" className="font-display text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-4">
                       Project Inquiry
-                    </p>
+                    </h2>
                     <p className="text-[1.125rem] leading-relaxed mb-8" style={{ color: "var(--text-muted)" }}>
                       Fill in the details so we can prepare for a productive first conversation.
                       The more context you share, the better we can help.

@@ -2,6 +2,7 @@ import { projects, Project } from "@/features/projects/project-data";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
+import { canonicalAlternates, openGraphPage } from "@/lib/seo/site";
 import { ProjectBackNav, ProjectHero, ProjectMeta, ProjectOverview, ProjectFeatures, ProjectServices, ProjectNext } from "@/components/projects/detail";
 import { NovaBrowserMockup, NovaDashboardMockup, NovaPanelMockup, NovaTypographyMockup } from "@/components/projects/nova-visuals";
 import { AureliaBrowserMockup, AureliaDevicesMockup, AureliaPanelMockup, AureliaTypographyMockup } from "@/components/projects/aurelia-visuals";
@@ -23,13 +24,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!project) return { title: "Project Not Found — SKY BUILDS" };
 
   return {
-    title: `${project.title} — ${project.category} — SKY BUILDS`,
+    title: `${project.title} — ${project.category}`,
     description: project.description,
-    openGraph: {
-      title: `${project.title} — ${project.category}`,
-      description: project.description,
-      type: "website",
-    },
+    ...openGraphPage(
+      `${project.title} — ${project.category}`,
+      project.description
+    ),
+    ...canonicalAlternates(`/projects/${project.slug}`),
   };
 }
 

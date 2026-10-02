@@ -50,11 +50,11 @@ export function AdminProjectDetail({ project }: AdminProjectDetailProps) {
         router.push("/admin/projects");
         router.refresh();
       } else {
-        setDeleteError(result.error || "Failed to delete this project.");
+        setDeleteError(result.error || "Failed to delete this work item.");
         setIsDeleting(false);
       }
     } catch {
-      setDeleteError("Failed to delete this project. Please try again.");
+        setDeleteError("Failed to delete this work item. Please try again.");
       setIsDeleting(false);
     }
   };
@@ -75,7 +75,7 @@ export function AdminProjectDetail({ project }: AdminProjectDetailProps) {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Back to Projects
+            Back to Selected Work
           </Link>
           <h1 className="font-display text-[clamp(1.75rem,3vw,2.5rem)] font-bold" style={{ color: "var(--text)" }}>
             {project.title}
@@ -208,9 +208,9 @@ export function AdminProjectDetail({ project }: AdminProjectDetailProps) {
         </button>
       <AdminConfirmDialog
         open={confirmOpen}
-        title="Delete this project?"
-        description={`“${project.title}” will be permanently removed from the portfolio.`}
-        confirmLabel="Delete project"
+          title="Delete this work item?"
+          description={`"${project.title}" will be permanently removed from the portfolio.`}
+          confirmLabel="Delete work"
         isConfirming={isDeleting}
         error={deleteError}
         onConfirm={handleDelete}

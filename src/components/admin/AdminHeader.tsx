@@ -9,7 +9,7 @@ import { signOutAction } from "@/app/admin/login/actions";
 const TITLES: Array<{ match: (p: string) => boolean; title: string; crumb: string }> = [
   { match: (p) => p === "/admin", title: "Dashboard", crumb: "Overview" },
   { match: (p) => p.startsWith("/admin/messages"), title: "Messages", crumb: "Inbox" },
-  { match: (p) => p.startsWith("/admin/projects"), title: "Projects", crumb: "Content" },
+    { match: (p) => p.startsWith("/admin/projects"), title: "Selected Work", crumb: "Content" },
   { match: (p) => p.startsWith("/admin/services"), title: "Services", crumb: "Content" },
   { match: (p) => p.startsWith("/admin/testimonials"), title: "Testimonials", crumb: "Content" },
   { match: (p) => p.startsWith("/admin/login"), title: "Sign in", crumb: "Access" },

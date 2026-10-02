@@ -58,7 +58,7 @@ export function ProjectList({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch projects");
+        throw new Error("Failed to fetch selected work");
       }
 
       const data = await response.json();
@@ -66,7 +66,7 @@ export function ProjectList({
       setTotalPages(data.totalPages);
       setPage(data.currentPage);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load projects");
+      setError(err instanceof Error ? err.message : "Failed to load selected work");
     } finally {
       setIsLoading(false);
     }
@@ -91,12 +91,12 @@ export function ProjectList({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 11a2 2 0 012-2h14a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6z" />
         </svg>
         <h3 className="font-display text-lg font-semibold mb-2" style={{ color: "var(--text)" }}>
-          {search || featured ? "No projects match your filters" : "No projects yet"}
+          {search || featured ? "No work matches your filters" : "No work yet"}
         </h3>
         <p className="text-sm" style={{ color: "var(--text-muted)" }}>
           {search || featured
             ? "Try adjusting your search or filters"
-            : "Create your first project to get started."}
+            : "Create your first work item to get started."}
         </p>
         {(search || featured) && (
           <button
@@ -120,7 +120,7 @@ export function ProjectList({
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            Create Project
+            Add Work
           </Link>
         )}
       </motion.div>
@@ -138,7 +138,7 @@ export function ProjectList({
       <div className="border-b p-4 md:p-6" style={{ borderColor: "var(--border)" }}>
         <div className="flex flex-col sm:flex-row gap-4 md:items-center md:justify-between">
           <h2 className="font-display text-lg font-semibold" style={{ color: "var(--text)" }}>
-            All Projects
+            All Work
           </h2>
 
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
@@ -165,7 +165,7 @@ export function ProjectList({
               }}
               className="w-full sm:w-40"
             >
-              <option value="false">All Projects</option>
+              <option value="false">All Work</option>
               <option value="true">Featured Only</option>
             </AdminSelect>
           </div>
@@ -200,12 +200,12 @@ export function ProjectList({
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
               className="w-8 h-8 rounded-full border-3 border-transparent border-t-[var(--primary)]"
             />
-            <span className="text-sm" style={{ color: "var(--text-muted)" }}>Loading projects...</span>
+            <span className="text-sm" style={{ color: "var(--text-muted)" }}>Loading selected work...</span>
           </div>
         </div>
       )}
 
-      {/* Project list */}
+      {/* Work list */}
       {!isLoading && projects.length > 0 && (
         <div className="divide-y" style={{ borderColor: "var(--border)" }}>
           {projects.map((project) => (

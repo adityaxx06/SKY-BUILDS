@@ -36,11 +36,10 @@ export function Navbar() {
 
   // Scroll-spy for the homepage section links. Only the homepage has
   // #about/#process targets; on other routes there is nothing to observe.
+  // (A stale activeHash from a previous homepage visit is harmless:
+  // isActive() additionally requires pathname === "/".)
   useEffect(() => {
-    if (pathname !== "/") {
-      setActiveHash(null);
-      return;
-    }
+    if (pathname !== "/") return;
     const sections = NAV_LINKS.map((l) => hashOf(l.href))
       .filter((h): h is string => h !== null)
       .map((h) => document.querySelector(h))
@@ -59,12 +58,8 @@ export function Navbar() {
     return () => observer.disconnect();
   }, [pathname]);
 
-  // Close the mobile menu on navigation (covers hash-link taps that
-  // stay on the same pathname) and on Escape.
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
-
+  // Close the mobile menu on Escape. (Link taps close it via their own
+  // onClick handlers, which also covers same-pathname hash navigation.)
   useEffect(() => {
     if (!menuOpen) return;
     const onKey = (e: KeyboardEvent) => {

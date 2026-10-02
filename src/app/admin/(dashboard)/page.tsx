@@ -1,6 +1,5 @@
 import { getDashboardData } from "./actions";
-import { Container } from "@/components/ui/Container";
-import { Reveal } from "@/components/ui/Reveal";
+import { AdminPage } from "@/components/admin/AdminPage";
 import { AdminStatCard } from "@/components/admin/AdminStatCard";
 import { AdminRecentMessages } from "@/components/admin/AdminRecentMessages";
 import { AdminQuickActions } from "@/components/admin/AdminQuickActions";
@@ -11,20 +10,11 @@ export default async function AdminDashboardPage() {
   const data = await getDashboardData();
 
   return (
-    <Container className="py-4">
-      <Reveal>
-        <div className="mb-10">
-          <h1 className="font-display text-[clamp(2rem,4vw,3rem)] font-bold" style={{ color: "var(--text)" }}>
-            Dashboard
-          </h1>
-          <p className="mt-2 text-[1.125rem]" style={{ color: "var(--text-muted)" }}>
-            Welcome back. Here&apos;s an overview of your SKY BUILDS workspace.
-          </p>
-        </div>
-      </Reveal>
-
-      <Reveal delay={0.1}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+    <AdminPage
+      title="Dashboard"
+      description="Welcome back. Here's an overview of your SKY BUILDS workspace."
+    >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
           <Link href="/admin/messages" className="block">
             <AdminStatCard
               label="New Messages"
@@ -81,34 +71,29 @@ export default async function AdminDashboardPage() {
             />
           </Link>
         </div>
-      </Reveal>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
         <div>
-          <Reveal delay={0.2}>
-            <AdminRecentMessages messages={data.recentMessages} />
-          </Reveal>
+          <AdminRecentMessages messages={data.recentMessages} />
         </div>
 
         <div>
-          <Reveal delay={0.25}>
-            {data.totalMessages === 0 ? (
-              <AdminEmptyState
-                icon={
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-8 h-8">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                  </svg>
-                }
-                title="No inquiries yet"
-                description="Contact form submissions will appear here once visitors reach out."
-                action={{ label: "View Messages", href: "/admin/messages" }}
-              />
-            ) : (
-              <AdminQuickActions />
-            )}
-          </Reveal>
+          {data.totalMessages === 0 ? (
+            <AdminEmptyState
+              icon={
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-8 h-8">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+              }
+              title="No inquiries yet"
+              description="Contact form submissions will appear here once visitors reach out."
+              action={{ label: "View Messages", href: "/admin/messages" }}
+            />
+          ) : (
+            <AdminQuickActions />
+          )}
         </div>
       </div>
-    </Container>
+    </AdminPage>
   );
 }

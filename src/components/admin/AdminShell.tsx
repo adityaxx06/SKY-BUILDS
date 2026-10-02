@@ -9,7 +9,11 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
 
+  // Close the mobile drawer on navigation (covers back/forward as well
+  // as link clicks). This is a genuine external-system sync (route
+  // change → UI state), not derived render state.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSidebarOpen(false);
   }, [pathname]);
 

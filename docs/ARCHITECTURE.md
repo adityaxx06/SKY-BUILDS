@@ -410,6 +410,26 @@ Public Site
 
 Admin components should not affect public-page rendering unless required.
 
+Layout isolation (route groups are URL-invisible):
+
+```text
+src/app/layout.tsx                  → minimal root shell
+src/app/(public)/layout.tsx         → Navbar + Footer (public only)
+src/app/admin/layout.tsx            → pass-through (no shell)
+src/app/admin/login/                → standalone auth screen
+src/app/admin/(dashboard)/layout.tsx → AdminSidebar + AdminHeader shell
+```
+
+Authorization is enforced in three independent layers (no layer trusts another):
+
+* `src/proxy.ts` — request-level route protection and redirects.
+* `requireAdmin()` at the top of every privileged Server Action.
+* `getCurrentUser()` 401/403 checks at the top of every admin API handler.
+
+Role source is always `user.app_metadata.role === "admin"`. A segment
+`error.tsx` inside `(dashboard)` renders a safe retry UI for admin
+render failures.
+
 ---
 
 # 16. Security Principles

@@ -1,7 +1,6 @@
 import { requireAdmin } from "@/lib/auth/admin";
 import { getProjectAdmin } from "@/app/admin/(dashboard)/actions";
 import { notFound } from "next/navigation";
-import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { AdminProjectForm } from "@/components/admin/AdminProjectForm";
 
@@ -20,7 +19,7 @@ export default async function AdminEditProjectPage({
   }
 
   return (
-    <Container className="py-4 max-w-4xl">
+    <div className="mx-auto w-full max-w-4xl">
       <Reveal>
         <AdminProjectForm
           mode="edit"
@@ -43,6 +42,6 @@ export default async function AdminEditProjectPage({
           }}
         />
       </Reveal>
-    </Container>
+    </div>
   );
 }

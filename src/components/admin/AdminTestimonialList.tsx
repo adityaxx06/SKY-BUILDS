@@ -92,10 +92,10 @@ export function AdminTestimonialList({
           {search || featured ? "Try adjusting your search or filters" : "Create your first testimonial to get started."}
         </p>
         {!search && !featured && (
-          <a href="/admin/testimonials/new" className="mt-4 inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium transition-colors" style={{ background: "var(--primary)", color: "var(--on-primary)" }}>
+          <Link href="/admin/testimonials/new" className="mt-4 inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium transition-colors" style={{ background: "var(--primary)", color: "var(--on-primary)" }}>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
             Create Testimonial
-          </a>
+          </Link>
         )}
       </motion.div>
     );
@@ -136,7 +136,9 @@ export function AdminTestimonialList({
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3">
                   <p className="font-medium truncate" style={{ color: "var(--text)" }}>{testimonial.client_name}</p>
-                  <AdminStatusBadge status={testimonial.featured ? "new" : "read"} size="sm" />
+                  {testimonial.featured && (
+                    <AdminStatusBadge status="featured" size="sm" />
+                  )}
                 </div>
                 <p className="text-sm truncate" style={{ color: "var(--text-muted)" }}>
                   {testimonial.company}{testimonial.client_role ? ` · ${testimonial.client_role}` : ""}

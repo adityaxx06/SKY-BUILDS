@@ -1,4 +1,5 @@
 import { getMessages } from "@/app/admin/(dashboard)/actions";
+import { getCurrentUser } from "@/lib/auth/admin";
 import { NextRequest, NextResponse } from "next/server";
 
 const VALID_STATUS_VALUES = ["new", "read", "in_progress", "closed", "all"] as const;
@@ -22,6 +23,10 @@ function isValidSortOrder(value: string): value is SortOrderValue {
 }
 
 export async function GET(request: NextRequest) {
+  const user = await getCurrentUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (user.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const { searchParams } = new URL(request.url);
 
   const page = parseInt(searchParams.get("page") || "1", 10);

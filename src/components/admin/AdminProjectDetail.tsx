@@ -1,8 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { AdminStatusBadge } from "./AdminStatusBadge";
+import { AdminConfirmDialog } from "./AdminConfirmDialog";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { deleteProjectAction } from "@/app/admin/(dashboard)/projects/actions";
 
 interface Project {
@@ -30,6 +33,32 @@ interface AdminProjectDetailProps {
 }
 
 export function AdminProjectDetail({ project }: AdminProjectDetailProps) {
+  const router = useRouter();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    setDeleteError(null);
+    const fd = new FormData();
+    fd.set("id", project.id);
+    try {
+      const result = await deleteProjectAction(fd);
+      if (result.success) {
+        setConfirmOpen(false);
+        router.push("/admin/projects");
+        router.refresh();
+      } else {
+        setDeleteError(result.error || "Failed to delete this project.");
+        setIsDeleting(false);
+      }
+    } catch {
+      setDeleteError("Failed to delete this project. Please try again.");
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -53,7 +82,7 @@ export function AdminProjectDetail({ project }: AdminProjectDetailProps) {
           </h1>
         </div>
         <div className="flex items-center gap-3">
-          <AdminStatusBadge status={project.featured ? "new" : "read"} showIcon />
+          {project.featured && <AdminStatusBadge status="featured" showIcon />}
         </div>
       </div>
 
@@ -163,19 +192,32 @@ export function AdminProjectDetail({ project }: AdminProjectDetailProps) {
           </svg>
           Edit
         </Link>
-        <form action={async (fd) => { await deleteProjectAction(fd); return; }}>
-          <input type="hidden" name="id" value={project.id} />
-          <button
-            type="submit"
-            className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium transition-colors"
-            style={{ background: "transparent", color: "var(--secondary)", border: "1px solid var(--secondary)" }}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-            Delete
-          </button>
-        </form>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteError(null);
+            setConfirmOpen(true);
+          }}
+          className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium transition-colors"
+          style={{ background: "transparent", color: "var(--secondary)", border: "1px solid var(--secondary)" }}
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+          Delete
+        </button>
+      <AdminConfirmDialog
+        open={confirmOpen}
+        title="Delete this project?"
+        description={`“${project.title}” will be permanently removed from the portfolio.`}
+        confirmLabel="Delete project"
+        isConfirming={isDeleting}
+        error={deleteError}
+        onConfirm={handleDelete}
+        onCancel={() => {
+          if (!isDeleting) setConfirmOpen(false);
+        }}
+      />
       </div>
     </motion.div>
   );

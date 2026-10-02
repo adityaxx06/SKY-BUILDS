@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { AdminInput } from "./AdminInput";
-import { AdminTextarea } from "./AdminTextarea";
-import { updateTestimonialAction, deleteTestimonialAction } from "@/app/admin/(dashboard)/testimonials/actions";
+import { useRouter } from "next/navigation";
+import { AdminConfirmDialog } from "./AdminConfirmDialog";
+import { deleteTestimonialAction } from "@/app/admin/(dashboard)/testimonials/actions";
 
 interface Testimonial {
   id: string;
@@ -25,6 +25,32 @@ interface AdminTestimonialDetailProps {
 }
 
 export function AdminTestimonialDetail({ testimonial }: AdminTestimonialDetailProps) {
+  const router = useRouter();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    setDeleteError(null);
+    const fd = new FormData();
+    fd.set("id", testimonial.id);
+    try {
+      const result = await deleteTestimonialAction(fd);
+      if (result.success) {
+        setConfirmOpen(false);
+        router.push("/admin/testimonials");
+        router.refresh();
+      } else {
+        setDeleteError(result.error || "Failed to delete this testimonial.");
+        setIsDeleting(false);
+      }
+    } catch {
+      setDeleteError("Failed to delete this testimonial. Please try again.");
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -40,13 +66,30 @@ export function AdminTestimonialDetail({ testimonial }: AdminTestimonialDetailPr
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
             Edit
           </a>
-          <form action={async (fd) => { await deleteTestimonialAction(fd); return; }}>
-            <input type="hidden" name="id" value={testimonial.id} />
-            <button type="submit" className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium transition-colors" style={{ background: "transparent", color: "var(--secondary)", border: "1px solid var(--secondary)" }}>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-              Delete
-            </button>
-          </form>
+          <button
+            type="button"
+            onClick={() => {
+              setDeleteError(null);
+              setConfirmOpen(true);
+            }}
+            className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium transition-colors"
+            style={{ background: "transparent", color: "var(--secondary)", border: "1px solid var(--secondary)" }}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+            Delete
+          </button>
+      <AdminConfirmDialog
+        open={confirmOpen}
+        title="Delete this testimonial?"
+        description={`“${testimonial.content.slice(0, 80)}${testimonial.content.length > 80 ? "…" : ""}” by ${testimonial.client_name} will be permanently removed.`}
+        confirmLabel="Delete testimonial"
+        isConfirming={isDeleting}
+        error={deleteError}
+        onConfirm={handleDelete}
+        onCancel={() => {
+          if (!isDeleting) setConfirmOpen(false);
+        }}
+      />
         </div>
       </div>
 

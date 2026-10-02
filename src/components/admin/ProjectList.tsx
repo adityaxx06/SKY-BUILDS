@@ -78,13 +78,6 @@ export function ProjectList({
     fetchProjects(1);
   };
 
-  const handleFeaturedChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value === "true";
-    setFeatured(value);
-    setPage(1);
-    fetchProjects(1);
-  };
-
   if (projects.length === 0 && !isLoading) {
     return (
       <motion.div
@@ -119,7 +112,7 @@ export function ProjectList({
           </button>
         )}
         {!search && !featured && (
-          <a
+          <Link
             href="/admin/projects/new"
             className="mt-4 inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium transition-colors"
             style={{ background: "var(--primary)", color: "var(--on-primary)" }}
@@ -128,7 +121,7 @@ export function ProjectList({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
             Create Project
-          </a>
+          </Link>
         )}
       </motion.div>
     );
@@ -226,7 +219,9 @@ export function ProjectList({
                   <p className="font-medium truncate" style={{ color: "var(--text)" }}>
                     {project.title}
                   </p>
-                  <AdminStatusBadge status={project.featured ? "new" : "read"} size="sm" />
+                  {project.featured && (
+                    <AdminStatusBadge status="featured" size="sm" />
+                  )}
                 </div>
                 <p className="text-sm truncate" style={{ color: "var(--text-muted)" }}>
                   {project.category} · Order: {project.display_order}

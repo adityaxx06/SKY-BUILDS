@@ -1,7 +1,6 @@
 import { requireAdmin } from "@/lib/auth/admin";
 import { getProjectsAdmin, getDashboardData } from "@/app/admin/(dashboard)/actions";
-import { Container } from "@/components/ui/Container";
-import { Reveal } from "@/components/ui/Reveal";
+import { AdminPage } from "@/components/admin/AdminPage";
 import { ProjectList } from "@/components/admin/ProjectList";
 
 export default async function AdminProjectsPage({
@@ -18,45 +17,25 @@ export default async function AdminProjectsPage({
   const params = await searchParams;
   const page = parseInt(params.page || "1", 10);
   const search = params.search || "";
-  const featured = params.featured === "true";
+  // "All Projects" in the UI means unfiltered: only narrow when ?featured=true.
+  const featured = params.featured === "true" ? true : undefined;
 
   const data = await getProjectsAdmin({ page, search, featured });
   const dashboardData = await getDashboardData();
 
   return (
-    <Container className="py-4">
-      <Reveal>
-        <div className="mb-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="font-display text-[clamp(2rem,4vw,3rem)] font-bold" style={{ color: "var(--text)" }}>
-              Projects
-            </h1>
-            <p className="mt-2 text-[1.125rem]" style={{ color: "var(--text-muted)" }}>
-              Manage portfolio projects. {dashboardData.projectsCount} total
-            </p>
-          </div>
-          <a
-            href="/admin/projects/new"
-            className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium transition-colors"
-            style={{ background: "var(--primary)", color: "var(--on-primary)" }}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            New Project
-          </a>
-        </div>
-      </Reveal>
-
-      <Reveal delay={0.1}>
-        <ProjectList
-          initialProjects={data.projects}
-          initialTotalPages={data.totalPages}
-          initialPage={data.currentPage}
-          initialSearch={search}
-          initialFeatured={featured}
-        />
-      </Reveal>
-    </Container>
+    <AdminPage
+      title="Projects"
+      description={`Manage portfolio projects. ${dashboardData.projectsCount} total`}
+      action={{ label: "New Project", href: "/admin/projects/new" }}
+    >
+      <ProjectList
+        initialProjects={data.projects}
+        initialTotalPages={data.totalPages}
+        initialPage={data.currentPage}
+        initialSearch={search}
+        initialFeatured={params.featured === "true"}
+      />
+    </AdminPage>
   );
 }

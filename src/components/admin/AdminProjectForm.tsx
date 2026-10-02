@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AdminInput } from "./AdminInput";
 import { AdminSelect } from "./AdminSelect";
 import { AdminTextarea } from "./AdminTextarea";
-import { updateProjectAction } from "@/app/admin/(dashboard)/projects/actions";
 
 interface AdminProjectFormProps {
   mode: "create" | "edit";
@@ -36,8 +36,10 @@ const FEATURED_OPTIONS = [
 
 export function AdminProjectForm({ mode, initialData }: AdminProjectFormProps) {
   const isCreate = mode === "create";
+  const router = useRouter();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   const validateForm = (formData: FormData): Record<string, string> => {
     const errs: Record<string, string> = {};
@@ -63,15 +65,19 @@ export function AdminProjectForm({ mode, initialData }: AdminProjectFormProps) {
     }
 
     try {
+      setIsSaving(true);
       const response = await fetch(`/admin/projects/api`, { method: "POST", body: formData });
       const data = await response.json();
       if (!response.ok || !data.success) {
         setSubmitError(data.error || "Failed to save project");
+        setIsSaving(false);
         return;
       }
-      window.location.href = `/admin/projects/${data.id}`;
-    } catch (err) {
+      router.push(`/admin/projects/${data.id}`);
+      router.refresh();
+    } catch {
       setSubmitError("Failed to save project");
+      setIsSaving(false);
     }
   };
 
@@ -129,9 +135,23 @@ export function AdminProjectForm({ mode, initialData }: AdminProjectFormProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 pt-6 border-t" style={{ borderColor: "var(--border)" }}>
-            <button type="submit" className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium transition-colors" style={{ background: "var(--primary)", color: "var(--on-primary)" }}>
-              {isCreate ? "Create Project" : "Save Changes"}
+          <div className="flex flex-wrap items-center gap-3 pt-6 border-t" style={{ borderColor: "var(--border)" }}>
+            <button
+              type="submit"
+              disabled={isSaving}
+              className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium transition-opacity disabled:cursor-wait"
+              style={{ background: "var(--primary)", color: "var(--on-primary)", opacity: isSaving ? 0.7 : 1 }}
+            >
+              {isSaving ? (
+                <>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-transparent border-t-[var(--on-primary)]" aria-hidden="true" />
+                  Saving…
+                </>
+              ) : isCreate ? (
+                "Create Project"
+              ) : (
+                "Save Changes"
+              )}
             </button>
             <Link href="/admin/projects" className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium transition-colors" style={{ background: "transparent", color: "var(--text-muted)", border: "1px solid var(--border)" }}>Cancel</Link>
             {submitError && <span className="text-sm font-medium" style={{ color: "var(--secondary)" }}>{submitError}</span>}

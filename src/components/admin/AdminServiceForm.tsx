@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AdminInput } from "./AdminInput";
 import { AdminTextarea } from "./AdminTextarea";
 
@@ -26,6 +27,7 @@ interface AdminServiceFormProps {
 
 export function AdminServiceForm({ mode, initialData }: AdminServiceFormProps) {
   const isCreate = mode === "create";
+  const router = useRouter();
   const [formData, setFormData] = useState({
     title: initialData?.title || "",
     slug: initialData?.slug || "",
@@ -37,6 +39,7 @@ export function AdminServiceForm({ mode, initialData }: AdminServiceFormProps) {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   const validateForm = (form: typeof formData): Record<string, string> => {
     const errs: Record<string, string> = {};
@@ -58,13 +61,20 @@ export function AdminServiceForm({ mode, initialData }: AdminServiceFormProps) {
     if (Object.keys(errs).length > 0) { setErrors(errs); return; }
 
     try {
-const fd = new FormData(e.currentTarget as HTMLFormElement);
+      setIsSaving(true);
+      const fd = new FormData(e.currentTarget as HTMLFormElement);
       const response = await fetch(`/admin/services/api`, { method: "POST", body: fd });
       const data = await response.json();
-      if (!response.ok || !data.success) { setSubmitError(data.error || "Failed to save service"); return; }
-      window.location.href = `/admin/services/${data.id}`;
-    } catch (err) {
+      if (!response.ok || !data.success) {
+        setSubmitError(data.error || "Failed to save service");
+        setIsSaving(false);
+        return;
+      }
+      router.push(`/admin/services/${data.id}`);
+      router.refresh();
+    } catch {
       setSubmitError("Failed to save service");
+      setIsSaving(false);
     }
   };
 
@@ -99,9 +109,23 @@ const fd = new FormData(e.currentTarget as HTMLFormElement);
             <AdminTextarea label="Short Description" name="short_description" defaultValue={initialData?.short_description ?? ""} rows={3} placeholder="Brief summary" />
             <AdminTextarea label="Full Description" name="description" defaultValue={initialData?.description ?? ""} rows={5} placeholder="Full service description" />
           </div>
-          <div className="flex items-center gap-3 pt-6 border-t" style={{ borderColor: "var(--border)" }}>
-            <button type="submit" className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium transition-colors" style={{ background: "var(--primary)", color: "var(--on-primary)" }}>
-              {isCreate ? "Create Service" : "Save Changes"}
+          <div className="flex flex-wrap items-center gap-3 pt-6 border-t" style={{ borderColor: "var(--border)" }}>
+            <button
+              type="submit"
+              disabled={isSaving}
+              className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium transition-opacity disabled:cursor-wait"
+              style={{ background: "var(--primary)", color: "var(--on-primary)", opacity: isSaving ? 0.7 : 1 }}
+            >
+              {isSaving ? (
+                <>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-transparent border-t-[var(--on-primary)]" aria-hidden="true" />
+                  Saving…
+                </>
+              ) : isCreate ? (
+                "Create Service"
+              ) : (
+                "Save Changes"
+              )}
             </button>
             <Link href="/admin/services" className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium transition-colors" style={{ background: "transparent", color: "var(--text-muted)", border: "1px solid var(--border)" }}>Cancel</Link>
             {submitError && <span className="text-sm font-medium" style={{ color: "var(--secondary)" }}>{submitError}</span>}

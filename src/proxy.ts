@@ -25,15 +25,14 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  // Refresh session if expired - required for Server Components to read auth state
-  await supabase.auth.getUser();
+  // Single auth read: also refreshes the session cookies when expired,
+  // which Server Components rely on to read auth state. Reused below.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   // Protect /admin/* routes
   if (request.nextUrl.pathname.startsWith("/admin")) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
     // Allow access to login page without auth
     if (request.nextUrl.pathname === "/admin/login") {
       // If already authenticated, check if admin

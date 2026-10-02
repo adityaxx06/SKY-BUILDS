@@ -2,13 +2,23 @@
 
 import { cn } from "@/lib/utils/cn";
 
-type Status = "new" | "read" | "in_progress" | "closed";
+type Status =
+  | "new"
+  | "read"
+  | "in_progress"
+  | "closed"
+  | "featured"
+  | "active"
+  | "inactive";
 
 const STATUS_LABELS: Record<Status, string> = {
   new: "New",
   read: "Read",
   in_progress: "In Progress",
   closed: "Closed",
+  featured: "Featured",
+  active: "Active",
+  inactive: "Inactive",
 };
 
 const STATUS_COLORS: Record<Status, string> = {
@@ -16,6 +26,9 @@ const STATUS_COLORS: Record<Status, string> = {
   read: "var(--accent)",
   in_progress: "var(--secondary)",
   closed: "var(--text-muted)",
+  featured: "var(--accent)",
+  active: "var(--success)",
+  inactive: "var(--text-muted)",
 };
 
 interface AdminStatusBadgeProps {

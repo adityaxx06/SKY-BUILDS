@@ -1,15 +1,33 @@
 import { getServicesAdmin } from "@/app/admin/(dashboard)/actions";
 import { createServerSupabaseAdminClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/auth/admin";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 
+/**
+ * Map a Supabase mutation error to a user-safe message. Raw database
+ * errors stay in server logs only — never in API responses.
+ */
+function toSafeMutationError(error: { code?: string } | null, fallback: string): string {
+  if (error?.code === "23505") {
+    return "An item with this slug already exists. Use a different slug.";
+  }
+  return fallback;
+}
+
 export async function GET(request: NextRequest) {
+  const user = await getCurrentUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (user.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get("page") || "1", 10);
   const limit = parseInt(searchParams.get("limit") || "10", 10);
   const search = searchParams.get("search") || undefined;
   const activeParam = searchParams.get("active");
-  const active = activeParam === "true";
+  // Client sends "false" for the "All Services" view: treat anything but
+  // explicit "true" as unfiltered.
+  const active = activeParam === "true" ? true : undefined;
 
   try {
     const data = await getServicesAdmin({ page, limit, search, active });
@@ -21,6 +39,10 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const user = await getCurrentUser();
+  if (!user) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  if (user.role !== "admin") return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
+
   const formData = await request.formData();
   const id = formData.get("id") as string;
 
@@ -55,7 +77,7 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error("Update service error:", error);
-      return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+      return NextResponse.json({ success: false, error: toSafeMutationError(error, "Failed to update service. Please try again.") }, { status: 500 });
     }
 
     revalidatePath("/admin/services");
@@ -79,7 +101,7 @@ export async function POST(request: NextRequest) {
 
   if (error) {
     console.error("Create service error:", error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: toSafeMutationError(error, "Failed to create service. Please try again.") }, { status: 500 });
   }
 
   revalidatePath("/admin/services");

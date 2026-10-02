@@ -1,7 +1,6 @@
 import { requireAdmin } from "@/lib/auth/admin";
 import { getMessages, getDashboardData } from "@/app/admin/(dashboard)/actions";
-import { Container } from "@/components/ui/Container";
-import { Reveal } from "@/components/ui/Reveal";
+import { AdminPage } from "@/components/admin/AdminPage";
 import { MessageList } from "@/components/admin/MessageList";
 
 type MessageStatus = "new" | "read" | "in_progress" | "closed" | "all" | undefined;
@@ -42,29 +41,19 @@ export default async function AdminMessagesPage({
   const dashboardData = await getDashboardData();
 
   return (
-    <Container className="py-4">
-      <Reveal>
-        <div className="mb-10">
-          <h1 className="font-display text-[clamp(2rem,4vw,3rem)] font-bold" style={{ color: "var(--text)" }}>
-            Messages
-          </h1>
-          <p className="mt-2 text-[1.125rem]" style={{ color: "var(--text-muted)" }}>
-            Manage contact form submissions. {dashboardData.totalMessages} total &middot; {dashboardData.newMessages} new
-          </p>
-        </div>
-      </Reveal>
-
-      <Reveal delay={0.1}>
-        <MessageList
-          initialMessages={data.messages}
-          initialTotalPages={data.totalPages}
-          initialPage={data.currentPage}
-          initialSearch={search}
-          initialStatus={params.status || "all"}
-          initialSortBy={sortBy}
-          initialSortOrder={sortOrder}
-        />
-      </Reveal>
-    </Container>
+    <AdminPage
+      title="Messages"
+      description={`Manage contact form submissions. ${dashboardData.totalMessages} total · ${dashboardData.newMessages} new`}
+    >
+      <MessageList
+        initialMessages={data.messages}
+        initialTotalPages={data.totalPages}
+        initialPage={data.currentPage}
+        initialSearch={search}
+        initialStatus={params.status || "all"}
+        initialSortBy={sortBy}
+        initialSortOrder={sortOrder}
+      />
+    </AdminPage>
   );
 }

@@ -13,6 +13,8 @@ import { useEffect, useRef } from "react";
  *   radial mask centered on the eased cursor position. Wherever the
  *   cursor goes, the grid *of that place* fades into view with a soft
  *   falloff; everywhere else stays quiet.
+ * - `.cg-glow` — a soft accent glow following the same eased position,
+ *   moved with rAF-lerped `transform` only.
  *
  * Both layers are `pointer-events: none` with negative z-index, so they
  * always paint behind page content.
@@ -23,10 +25,12 @@ import { useEffect, useRef } from "react";
  */
 export function CursorGrid() {
   const revealRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const reveal = revealRef.current;
-    if (!reveal) return;
+    const glow = glowRef.current;
+    if (!reveal || !glow) return;
 
     // Interactive layer only for fine pointers without reduced motion.
     // Otherwise the static base grid (rendered below) is all that shows.
@@ -48,11 +52,13 @@ export function CursorGrid() {
       if (!shown) {
         shown = true;
         reveal.style.opacity = "1";
+        glow.style.opacity = "1";
       }
     };
     const onLeave = () => {
       shown = false;
       reveal.style.opacity = "0";
+      glow.style.opacity = "0";
     };
     const tick = () => {
       x += (targetX - x) * 0.12;
@@ -61,6 +67,7 @@ export function CursorGrid() {
       if (Math.abs(targetY - y) < 0.05) y = targetY;
       reveal.style.setProperty("--cg-x", `${x.toFixed(1)}px`);
       reveal.style.setProperty("--cg-y", `${y.toFixed(1)}px`);
+      glow.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
       raf = requestAnimationFrame(tick);
     };
 
@@ -78,6 +85,7 @@ export function CursorGrid() {
     <>
       <div className="cg-base" aria-hidden="true" />
       <div ref={revealRef} className="cg-reveal" aria-hidden="true" />
+      <div ref={glowRef} className="cg-glow" aria-hidden="true" />
     </>
   );
 }

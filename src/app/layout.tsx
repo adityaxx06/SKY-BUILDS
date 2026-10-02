@@ -1,14 +1,64 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import {
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  SITE_NAME,
+  getSiteUrl,
+} from "@/lib/seo/site";
 
 type RootLayoutProps = {
   children: React.ReactNode;
 };
 
+const siteUrl = getSiteUrl();
+
 export const metadata: Metadata = {
-  title: "SKY BUILDS",
-  description:
-    "SKY BUILDS is a modern web development studio building high-quality digital experiences for ambitious businesses.",
+  metadataBase: siteUrl ? new URL(siteUrl) : undefined,
+  title: {
+    default: `${SITE_NAME} — Modern Web Development Studio`,
+    template: `%s — ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  keywords: SITE_KEYWORDS,
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  applicationName: SITE_NAME,
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — Modern Web Development Studio`,
+    description: SITE_DESCRIPTION,
+    ...(siteUrl
+      ? {
+          images: [
+            {
+              url: `${siteUrl}/opengraph-image`,
+              width: 1200,
+              height: 630,
+              alt: `${SITE_NAME} — Digital experiences built to move ideas forward.`,
+            },
+          ],
+        }
+      : {}),
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} — Modern Web Development Studio`,
+    description: SITE_DESCRIPTION,
+    ...(siteUrl ? { images: [`${siteUrl}/opengraph-image`] } : {}),
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#F7F1EA" },
+    { media: "(prefers-color-scheme: dark)", color: "#120E1F" },
+  ],
 };
 
 export default function RootLayout({ children }: RootLayoutProps) {

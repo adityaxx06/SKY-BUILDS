@@ -5,7 +5,7 @@ import { services } from "@/features/services/service-data";
 
 export function Services() {
   return (
-    <Container as="section" id="services" className="py-24">
+    <Container as="section" id="services" className="py-24 scroll-mt-20">
       <Reveal>
         <p className="mb-5 text-[0.8125rem] font-medium" style={{ color: "var(--text-muted)" }}>
           Services

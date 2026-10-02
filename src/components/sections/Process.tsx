@@ -9,7 +9,7 @@ import { processSteps } from "@/lib/constants/process-data";
  */
 export function Process() {
   return (
-    <section id="process" className="relative overflow-hidden py-24">
+    <section id="process" className="relative overflow-hidden py-24 scroll-mt-20">
       <div className="grid-bg" aria-hidden />
       <Container className="relative z-10">
         <Reveal>

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/Button";
 
 export function CTA() {
   return (
-    <Container as="section" id="cta" className="py-24">
+    <Container as="section" id="cta" className="py-24 scroll-mt-20">
       <Reveal>
         <div
           className="corner-marks relative overflow-hidden rounded-3xl p-10 md:p-16"

@@ -40,7 +40,7 @@ export function WhatHappensNext() {
           transition={{ duration: 0.85, ease: [0.22, 0.61, 0.36, 1] }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <p className="font-display text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-4">
+          <p id="next-heading" className="font-display text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-4">
             What happens next
           </p>
           <p className="text-[1.125rem] leading-relaxed" style={{ color: "var(--text-muted)" }}>

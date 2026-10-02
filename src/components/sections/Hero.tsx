@@ -8,7 +8,7 @@ import { HeroVisual } from "./hero/HeroVisual";
  */
 export function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden pt-28 pb-16 md:pt-32 md:pb-20 lg:pt-36 lg:pb-24">
+    <section id="top" className="relative overflow-hidden pt-28 pb-16 md:pt-32 md:pb-20 lg:pt-36 lg:pb-24 scroll-mt-24">
       <div className="grid-bg opacity-50" aria-hidden />
       
       {/* Animated geometric background elements */}

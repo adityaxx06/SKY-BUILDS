@@ -16,7 +16,7 @@ const capabilities = [
 
 export function About() {
   return (
-    <Container as="section" id="about" className="py-24">
+    <Container as="section" id="about" className="py-24 scroll-mt-20">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.2fr_1fr]">
         <Reveal>
           <p className="mb-5 text-[0.8125rem] font-medium" style={{ color: "var(--text-muted)" }}>

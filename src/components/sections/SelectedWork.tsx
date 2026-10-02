@@ -8,7 +8,7 @@ export function SelectedWork() {
   const [featured, ...rest] = sorted;
 
   return (
-    <Container as="section" id="work" className="py-24">
+    <Container as="section" id="work" className="py-24 scroll-mt-20">
       <Reveal>
         <p className="mb-5 text-[0.8125rem] font-medium" style={{ color: "var(--text-muted)" }}>
           Selected work

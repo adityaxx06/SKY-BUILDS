@@ -9,7 +9,7 @@ import { CTA } from "@/components/sections/CTA";
 
 export default function Home() {
   return (
-    <main id="main-content">
+    <main>
       <Hero />
       <Marquee />
       <Services />

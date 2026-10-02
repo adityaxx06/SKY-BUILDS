@@ -21,7 +21,7 @@ export default function ContactPage() {
 
       <main className="min-h-screen" style={{ background: "var(--bg)" }}>
         <section className="py-16 md:py-24 lg:py-32" aria-labelledby="inquiry-heading">
-          <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto px-6 md:px-10">
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-16 items-start">
               <div className="relative">
                 <div className="sticky top-24 space-y-8">

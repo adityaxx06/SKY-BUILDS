@@ -20,7 +20,7 @@ export function Hero() {
 
       <Container className="relative z-10 w-full grid grid-cols-1 items-start gap-8 md:grid-cols-[1.05fr_0.95fr] md:items-center">
         <div>
-          {/* Badge for social proof */}
+          {/* Availability status */}
           <div className="animate-rise-in inline-flex items-center gap-2 rounded-full border px-4 py-1.5 mb-6" style={{ 
             borderColor: "var(--border)", 
             background: "var(--glass-bg)",
@@ -30,7 +30,7 @@ export function Hero() {
               <span className="absolute inset-0 h-2 w-2 rounded-full animate-ping" style={{ background: "var(--success)", opacity: 0.5 }} />
             </span>
             <span className="text-[0.75rem] font-medium" style={{ color: "var(--text-muted)" }}>
-              Trusted by 50+ ambitious teams
+              Available for new projects
             </span>
           </div>
 
@@ -67,7 +67,7 @@ export function Hero() {
             <Button href="#work" variant="secondary">
               See our work
             </Button>
-            <div className="ml-4 flex items-center gap-3 text-[0.875rem]" style={{ color: "var(--text-muted)" }}>
+            <div className="ml-0 flex w-full items-center gap-3 text-[0.875rem] md:ml-4 md:w-auto" style={{ color: "var(--text-muted)" }}>
               <span className="flex items-center gap-1.5">
                 <svg className="h-4 w-4" style={{ color: "var(--primary)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -76,9 +76,9 @@ export function Hero() {
               </span>
               <span className="flex items-center gap-1.5">
                 <svg className="h-4 w-4" style={{ color: "var(--accent)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
-                98% client retention
+                Direct communication
               </span>
             </div>
           </div>

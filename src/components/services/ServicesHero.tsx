@@ -14,7 +14,7 @@ export function ServicesHero() {
         <div className="grid-bg" style={{ opacity: 0.3 }} />
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -22,7 +22,7 @@ export function ServicesHero() {
           transition={{ duration: 0.85, ease: [0.22, 0.61, 0.36, 1] }}
         >
           <p className="font-display text-[clamp(1rem,2vw,1.25rem)] font-medium mb-6 tracking-wide" style={{ color: "var(--accent)" }}>
-            WHAT WE BUILD
+            What we build
           </p>
         </motion.div>
 
@@ -89,7 +89,7 @@ export function ServicesHero() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 1.2, delay: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-4xl md:bottom-[-60px] pointer-events-none"
+          className="absolute bottom-0 left-1/2 hidden w-full max-w-4xl -translate-x-1/2 md:block pointer-events-none"
           aria-hidden
         >
           <div className="flex items-center justify-center gap-8 md:gap-16 px-4">
@@ -99,7 +99,7 @@ export function ServicesHero() {
                   <ServiceVisualSmall serviceId={service.id} />
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: `linear-gradient(135deg, ${service.swatch[0]}, ${service.swatch[1]})` }} />
                 </div>
-                <span className="text-[0.6875rem] font-medium uppercase tracking-wider text-center max-w-[80px]" style={{ color: "var(--text-muted)" }}>
+                <span className="text-[0.6875rem] font-medium tracking-wider text-center max-w-[80px]" style={{ color: "var(--text-muted)" }}>
                   {service.title}
                 </span>
               </div>

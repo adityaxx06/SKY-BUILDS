@@ -79,11 +79,11 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
   return (
     <>
-      <div className="min-h-screen pt-32 md:pt-40" style={{ background: "var(--background)" }}>
+      <div className="min-h-screen pt-32 md:pt-40" style={{ background: "var(--bg)" }}>
         <ProjectBackNav />
         <ProjectHero project={project} />
         <ProjectMeta project={project} />
-        <Container className="max-w-[1440px]">
+        <Container>
           <ProjectVisualGallery project={project} />
           <ProjectOverview project={project} />
           <ProjectFeatures project={project} />

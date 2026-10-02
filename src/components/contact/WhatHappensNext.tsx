@@ -32,7 +32,7 @@ export function WhatHappensNext() {
         <div className="grid-bg" style={{ opacity: 0.2 }} />
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-6 md:px-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -49,8 +49,6 @@ export function WhatHappensNext() {
         </motion.div>
 
         <div className="relative">
-          <div className="absolute left-1/2 top-0 bottom-0 w-px" style={{ background: "var(--border)" }} aria-hidden />
-          
           <div className="space-y-12">
             {steps.map((step, index) => (
               <motion.div

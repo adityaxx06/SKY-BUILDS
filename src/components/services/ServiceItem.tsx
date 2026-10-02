@@ -10,7 +10,7 @@ export function ServiceItem({ service }: { service: Service }) {
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="flex cursor-pointer items-center gap-6 border-b py-6 transition-[padding,background] duration-500"
+      className="flex items-center gap-4 md:gap-6 border-b py-6 transition-[padding,background] duration-500"
       style={{
         borderColor: "var(--border)",
         paddingLeft: hovered ? "1rem" : 0,
@@ -28,13 +28,13 @@ export function ServiceItem({ service }: { service: Service }) {
       >
         {service.id}
       </span>
-      <div className="flex-1">
-        <span className="font-display text-[1.6rem] font-medium">{service.title}</span>
+      <div className="flex-1 min-w-0">
+        <span className="font-display text-[1.35rem] md:text-[1.6rem] font-medium">{service.title}</span>
         <p
           className="mt-1 overflow-hidden text-[0.9375rem] transition-all duration-300"
           style={{
             color: "var(--text-muted)",
-            maxHeight: hovered ? "1.5rem" : 0,
+            maxHeight: hovered ? "3.5rem" : 0,
             opacity: hovered ? 1 : 0,
           }}
         >

@@ -30,7 +30,7 @@ export function CTA() {
               <Button href="mailto:hello@skybuilds.studio" showArrow>
                 Start a project
               </Button>
-              <Button href="#services" variant="secondary">
+              <Button href="/#services" variant="secondary">
                 View services
               </Button>
             </div>

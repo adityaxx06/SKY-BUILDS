@@ -6,10 +6,12 @@ import { Reveal } from "@/components/ui/Reveal";
  * Experience). Reuses Container/Reveal and the existing v5 tokens;
  * introduces no new colors, gradients, or components.
  *
- * Routes that don't exist yet (About, Contact, Privacy, Terms) are
- * rendered as plain, non-focusable text rather than fake <a> links —
- * PRD's sitemap (§8) lists them, but building working links to pages
- * that 404 would be worse than naming them honestly as "soon".
+ * Routes that don't exist yet (Privacy, Terms) are rendered as plain,
+ * non-focusable text rather than fake <a> links — PRD's sitemap (§8)
+ * lists them, but building working links to pages that 404 would be
+ * worse than naming them honestly as "soon". Section links (#services,
+ * #about, #work, #process) point at homepage anchors and work from any
+ * page via "/#..." hrefs.
  *
  * No social links: PRD/DATABASE.md don't define any real SKY BUILDS
  * social accounts, and inventing placeholder ones was explicitly
@@ -17,10 +19,10 @@ import { Reveal } from "@/components/ui/Reveal";
  */
 
 const BUILT_LINKS = [
-  { href: "#services", label: "Services" },
-  { href: "#about", label: "About" },
-  { href: "#work", label: "Work" },
-  { href: "#process", label: "Process" },
+  { href: "/#services", label: "Services" },
+  { href: "/#about", label: "About" },
+  { href: "/#work", label: "Work" },
+  { href: "/#process", label: "Process" },
   { href: "/contact", label: "Contact" },
 ] as const;
 

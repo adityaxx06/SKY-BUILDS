@@ -14,7 +14,7 @@ export function ContactHero() {
         <div className="grid-bg" style={{ opacity: 0.3 }} />
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -22,7 +22,7 @@ export function ContactHero() {
           transition={{ duration: 0.85, ease: [0.22, 0.61, 0.36, 1] }}
         >
           <p className="font-display text-[clamp(1rem,2vw,1.25rem)] font-medium mb-6 tracking-wide" style={{ color: "var(--accent)" }}>
-            LET&rsquo;S BUILD SOMETHING
+            Let&rsquo;s build something
           </p>
         </motion.div>
 
@@ -57,7 +57,7 @@ export function ContactHero() {
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.85, delay: 0.35, ease: [0.22, 0.61, 0.36, 1] }}
         >
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-3 md:gap-4" role="list" aria-label="Service overview">
+          <div className="mt-12 flex flex-wrap items-center justify-start gap-3 md:gap-4" role="list" aria-label="Service overview">
             {services.map((service, index) => (
               <motion.div
                 key={service.id}
@@ -91,13 +91,12 @@ export function ContactHero() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.85, delay: 0.55, ease: [0.22, 0.61, 0.36, 1] }}
-          className="mt-16 flex items-center justify-center gap-4"
+          className="mt-16 flex items-center justify-start gap-4"
         >
-          <div className="w-full max-w-[300px] h-px" style={{ background: "linear-gradient(90deg, transparent, var(--border), transparent)" }} />
-          <span className="px-4 text-[0.75rem] font-medium uppercase tracking-widest" style={{ color: "var(--text-muted)", background: "var(--bg)" }}>
+          <span className="text-[0.75rem] font-medium uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
             What are you building?
           </span>
-          <div className="w-full max-w-[300px] h-px" style={{ background: "linear-gradient(90deg, transparent, var(--border), transparent)" }} />
+          <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, var(--border), transparent)" }} />
         </motion.div>
       </div>
     </header>

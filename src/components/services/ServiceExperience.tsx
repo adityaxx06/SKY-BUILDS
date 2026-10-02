@@ -87,13 +87,9 @@ function ServiceCard({ service, expandedId, onToggle }: ServiceCardProps) {
               {service.id}
             </motion.div>
             <div className="flex-1 min-w-0">
-              <motion.h2
-                className="font-display text-xl md:text-2xl font-semibold transition-colors duration-300"
-                style={{ color: isExpanded ? "var(--text)" : "var(--text)" }}
-                animate={{ color: isExpanded ? "var(--text)" : "var(--text)" }}
-              >
+              <h2 className="font-display text-xl md:text-2xl font-semibold" style={{ color: "var(--text)" }}>
                 {service.title}
-              </motion.h2>
+              </h2>
             </div>
             <motion.button
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggle(service.id); }}
@@ -140,7 +136,7 @@ function ServiceCard({ service, expandedId, onToggle }: ServiceCardProps) {
               <motion.span
                 key={deliverable}
                 layout
-                className="px-3 py-1.5 rounded-full text-[0.7rem] font-medium uppercase tracking-wider transition-all duration-300"
+                className="px-3 py-1.5 rounded-full text-[0.7rem] font-medium tracking-wider transition-all duration-300"
                 style={{ background: "var(--surface-elevated)", border: "1px solid var(--border)", color: "var(--text-muted)" }}
                 whileHover={{ borderColor: service.swatch[0], color: service.swatch[0] }}
               >
@@ -229,6 +225,8 @@ function ServiceCard({ service, expandedId, onToggle }: ServiceCardProps) {
 
 export function ServiceExperience({ services: servicesList }: { services: Service[] }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const handleToggle = (id: string) =>
+    setExpandedId((prev) => (prev === id ? null : id));
 
   return (
     <section aria-labelledby="services-heading" className="py-16 md:py-24 lg:py-32 relative">
@@ -236,15 +234,17 @@ export function ServiceExperience({ services: servicesList }: { services: Servic
         <div className="grid-bg" style={{ opacity: 0.25 }} />
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-6 md:px-10">
         <Reveal>
-          <p className="font-display text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-4">
-            Our Capabilities
-          </p>
-          <p className="max-w-2xl" style={{ color: "var(--text-muted)" }}>
-            Each service is a complete end-to-end capability — not a line item.
-            We handle strategy, design, development, and launch as one continuous process.
-          </p>
+          <div className="text-center max-w-3xl mx-auto">
+            <p className="font-display text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-4">
+              Our capabilities
+            </p>
+            <p className="max-w-2xl mx-auto" style={{ color: "var(--text-muted)" }}>
+              Each service is a complete end-to-end capability — not a line item.
+              We handle strategy, design, development, and launch as one continuous process.
+            </p>
+          </div>
         </Reveal>
 
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-6" role="list">
@@ -253,7 +253,7 @@ export function ServiceExperience({ services: servicesList }: { services: Servic
               <ServiceCard
                 service={service}
                 expandedId={expandedId}
-                onToggle={setExpandedId}
+                onToggle={handleToggle}
               />
             </Reveal>
           ))}

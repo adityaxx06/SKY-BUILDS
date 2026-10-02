@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Project } from "@/features/projects/project-data";
 import { BrowserMockup, DevicesMockup, DashboardMockup } from "./mockups";
 
@@ -11,7 +12,7 @@ export function ProjectCard({ project, large = false }: { project: Project; larg
   const Mockup = MOCKUPS[project.mockupType];
 
   return (
-    <a
+    <Link
       href={`/projects/${project.slug}`}
       aria-label={`View the ${project.title} concept project — ${project.category}`}
       className="group relative flex h-full flex-col overflow-hidden rounded-[18px] border transition-transform duration-300"
@@ -47,12 +48,12 @@ export function ProjectCard({ project, large = false }: { project: Project; larg
           </span>
         </div>
         <p
-          className="overflow-hidden text-[0.875rem] transition-all duration-300 group-hover:mt-2 group-hover:max-h-10 group-hover:opacity-100"
+          className="overflow-hidden text-[0.875rem] transition-all duration-300 group-hover:mt-2 group-hover:max-h-24 group-hover:opacity-100"
           style={{ color: "var(--text-muted)", maxHeight: 0, opacity: 0 }}
         >
           {project.description}
         </p>
       </div>
-    </a>
+    </Link>
   );
 }

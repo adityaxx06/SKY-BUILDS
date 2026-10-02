@@ -84,6 +84,15 @@
 html {
   overflow-x: hidden;
 }
+
+/* Smooth anchor navigation (navbar section links). Instant jumps feel
+   broken next to the site's eased motion language; disabled when the
+   user prefers reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
 body {
   overflow-x: hidden;
 }

@@ -29,7 +29,7 @@ export default function ServicesPage() {
           <Container>
             <Reveal>
               <div className="text-center max-w-3xl mx-auto mb-16">
-                <p className="font-display text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-4">
+                <p id="process-heading" className="font-display text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-4">
                   How we work
                 </p>
                 <p className="text-[1.125rem] leading-relaxed" style={{ color: "var(--text-muted)" }}>

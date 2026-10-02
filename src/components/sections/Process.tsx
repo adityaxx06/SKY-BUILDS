@@ -13,9 +13,9 @@ export function Process() {
       <div className="grid-bg" aria-hidden />
       <Container className="relative z-10">
         <Reveal>
-          <p className="mb-5 text-[0.8125rem] font-medium" style={{ color: "var(--text-muted)" }}>
+          <h2 className="mb-5 text-[0.8125rem] font-medium" style={{ color: "var(--text-muted)" }}>
             Process
-          </p>
+          </h2>
         </Reveal>
         <ol>
           {processSteps.map((step, i) => (

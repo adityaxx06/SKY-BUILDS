@@ -19,9 +19,9 @@ export function About() {
     <Container as="section" id="about" className="py-24 scroll-mt-20">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.2fr_1fr]">
         <Reveal>
-          <p className="mb-5 text-[0.8125rem] font-medium" style={{ color: "var(--text-muted)" }}>
+          <h2 className="mb-5 text-[0.8125rem] font-medium" style={{ color: "var(--text-muted)" }}>
             About
-          </p>
+          </h2>
           <h2 className="font-display max-w-[16ch] text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.08] font-medium">
             Good websites are <em className="grad-word not-italic">considered</em>, not assembled.
           </h2>

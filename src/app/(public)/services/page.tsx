@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { canonicalAlternates } from "@/lib/seo/site";
+import { canonicalAlternates, openGraphPage } from "@/lib/seo/site";
 import { services } from "@/features/services/service-data";
 import { ServicesHero } from "@/components/services/ServicesHero";
 import { ServiceExperience } from "@/components/services/ServiceExperience";
@@ -9,13 +9,12 @@ import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 
 export const metadata: Metadata = {
-  title: "Services — SKY BUILDS",
+  title: "Services",
   description: "Six focused capabilities — website design & development, web applications, UI/UX design, website redesign, e-commerce, and design systems. End-to-end digital experiences.",
-  openGraph: {
-    title: "Services — SKY BUILDS",
-    description: "Six focused capabilities — website design & development, web applications, UI/UX design, website redesign, e-commerce, and design systems.",
-    type: "website",
-  },
+  ...openGraphPage(
+    "Services — SKY BUILDS",
+    "Six focused capabilities — website design & development, web applications, UI/UX design, website redesign, e-commerce, and design systems."
+  ),
   ...canonicalAlternates("/services"),
 };
 

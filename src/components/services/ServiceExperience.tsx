@@ -237,9 +237,9 @@ export function ServiceExperience({ services: servicesList }: { services: Servic
       <div className="max-w-6xl mx-auto px-6 md:px-10">
         <Reveal>
           <div className="text-center max-w-3xl mx-auto">
-            <p id="services-heading" className="font-display text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-4">
+            <h2 id="services-heading" className="font-display text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-4">
               Our capabilities
-            </p>
+            </h2>
             <p className="max-w-2xl mx-auto" style={{ color: "var(--text-muted)" }}>
               Each service is a complete end-to-end capability — not a line item.
               We handle strategy, design, development, and launch as one continuous process.

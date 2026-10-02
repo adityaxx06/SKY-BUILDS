@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { canonicalAlternates } from "@/lib/seo/site";
 import { services } from "@/features/services/service-data";
 import { ServicesHero } from "@/components/services/ServicesHero";
 import { ServiceExperience } from "@/components/services/ServiceExperience";
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
     description: "Six focused capabilities — website design & development, web applications, UI/UX design, website redesign, e-commerce, and design systems.",
     type: "website",
   },
+  ...canonicalAlternates("/services"),
 };
 
 export default function ServicesPage() {
@@ -29,9 +31,9 @@ export default function ServicesPage() {
           <Container>
             <Reveal>
               <div className="text-center max-w-3xl mx-auto mb-16">
-                <p id="process-heading" className="font-display text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-4">
+                <h2 id="process-heading" className="font-display text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-4">
                   How we work
-                </p>
+                </h2>
                 <p className="text-[1.125rem] leading-relaxed" style={{ color: "var(--text-muted)" }}>
                   Every engagement follows our proven process — from discovery to launch and beyond.
                   No handoff gaps, no surprise scope creep.

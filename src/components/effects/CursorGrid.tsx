@@ -1,40 +1,39 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 /**
  * Global cursor-reactive background grid (Phase 10.7).
  *
- * Two fixed layers, both `pointer-events: none` and negative z-index so
- * they always paint behind page content:
+ * ONE full-page grid, revealed by the cursor — not a travelling block:
  *
- * - `.cg-base` — static faint full-viewport grid (all devices, both
- *   themes, reduced-motion safe).
- * - `.cg-lens` — eased cursor follower (fine pointers + no reduced
- *   motion only): a brighter grid patch with a soft accent glow and a
- *   radial falloff, moved with rAF-lerped `transform` only.
+ * - `.cg-base` — static, extremely faint full-viewport grid (all
+ *   devices, both themes, reduced-motion safe).
+ * - `.cg-reveal` — the same grid, brighter, fixed full-viewport, with a
+ *   radial mask centered on the eased cursor position. Wherever the
+ *   cursor goes, the grid *of that place* fades into view with a soft
+ *   falloff; everywhere else stays quiet.
  *
- * No React state updates happen per pointer movement — coordinates live
- * in refs and are written straight to the lens element's transform.
+ * Both layers are `pointer-events: none` with negative z-index, so they
+ * always paint behind page content.
+ *
+ * No React state is used at all — coordinates live in refs and are
+ * written to CSS custom properties (mask position only), so pointer
+ * movement never triggers a re-render.
  */
 export function CursorGrid() {
-  const [interactive, setInteractive] = useState(false);
-  const lensRef = useRef<HTMLDivElement>(null);
-
-  // Decide once on mount (never during render: SSR has no matchMedia,
-  // and this must not differ between server and client HTML).
-  useEffect(() => {
-    const finePointer = window.matchMedia("(pointer: fine)").matches;
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    if (finePointer && !reducedMotion) setInteractive(true);
-  }, []);
+  const revealRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!interactive) return;
-    const lens = lensRef.current;
-    if (!lens) return;
+    const reveal = revealRef.current;
+    if (!reveal) return;
+
+    // Interactive layer only for fine pointers without reduced motion.
+    // Otherwise the static base grid (rendered below) is all that shows.
+    const eligible =
+      window.matchMedia("(pointer: fine)").matches &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!eligible) return;
 
     let targetX = window.innerWidth / 2;
     let targetY = window.innerHeight * 0.3;
@@ -48,19 +47,20 @@ export function CursorGrid() {
       targetY = e.clientY;
       if (!shown) {
         shown = true;
-        lens.style.opacity = "1";
+        reveal.style.opacity = "1";
       }
     };
     const onLeave = () => {
       shown = false;
-      lens.style.opacity = "0";
+      reveal.style.opacity = "0";
     };
     const tick = () => {
       x += (targetX - x) * 0.12;
       y += (targetY - y) * 0.12;
       if (Math.abs(targetX - x) < 0.05) x = targetX;
       if (Math.abs(targetY - y) < 0.05) y = targetY;
-      lens.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
+      reveal.style.setProperty("--cg-x", `${x.toFixed(1)}px`);
+      reveal.style.setProperty("--cg-y", `${y.toFixed(1)}px`);
       raf = requestAnimationFrame(tick);
     };
 
@@ -72,17 +72,12 @@ export function CursorGrid() {
       window.removeEventListener("pointermove", onMove);
       document.documentElement.removeEventListener("pointerleave", onLeave);
     };
-  }, [interactive]);
+  }, []);
 
   return (
     <>
       <div className="cg-base" aria-hidden="true" />
-      {interactive && (
-        <div ref={lensRef} className="cg-lens" aria-hidden="true">
-          <div className="cg-lens-grid" />
-          <div className="cg-lens-glow" />
-        </div>
-      )}
+      <div ref={revealRef} className="cg-reveal" aria-hidden="true" />
     </>
   );
 }

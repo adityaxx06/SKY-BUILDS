@@ -60,21 +60,14 @@ export function WhatHappensNext() {
                 className="relative flex gap-8 md:gap-12"
               >
                 <div className="flex flex-col items-center w-20 flex-shrink-0 relative z-10">
-                  <motion.div
+                  <div
                     className="w-12 h-12 rounded-full flex items-center justify-center mb-3 relative"
                     style={{ background: "var(--surface-elevated)", border: "1px solid var(--border)" }}
                   >
                     <span className="font-display text-lg font-bold" style={{ color: "var(--primary)" }}>
                       {step.num}
                     </span>
-                    <motion.div
-                      className="absolute inset-0 rounded-full"
-                      style={{ background: "linear-gradient(135deg, var(--primary), var(--secondary))", opacity: 0 }}
-                      initial={{ scale: 0.5 }}
-                      animate={{ scale: 1.5, opacity: [0.4, 0] }}
-                      transition={{ duration: 1.5, delay: 0.5, repeat: Infinity, ease: "easeOut" }}
-                    />
-                  </motion.div>
+                  </div>
                   <div className="h-full w-px flex-1" style={{ background: "var(--border)" }} aria-hidden />
                 </div>
                 

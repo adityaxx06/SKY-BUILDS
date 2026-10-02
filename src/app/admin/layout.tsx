@@ -6,6 +6,24 @@
  * /admin/login stays a standalone authentication screen. Route groups
  * do not affect URLs, so /(dashboard) routes still resolve to /admin/*.
  */
+
+import type { Metadata } from "next";
+
+/**
+ * Admin routes must never appear in search results. This is purely a
+ * crawling directive — authentication/authorization (proxy.ts +
+ * requireAdmin + RLS) remain the actual protection and are unchanged.
+ */
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
+};
 export default function AdminLayout({
   children,
 }: {

@@ -157,61 +157,51 @@ body {
   background-size: 48px 48px;
 }
 
-.cg-lens {
-  --cg-lens-size: 620px;
+/* In-place reveal: the same grid, brighter, unmasked only around the
+   eased cursor position. Nothing travels with the cursor — the grid of
+   that place simply fades into view with a soft falloff. */
+.cg-reveal {
+  --cg-x: 50vw;
+  --cg-y: 30vh;
+  --cg-r: 260px;
   position: fixed;
-  left: 0;
-  top: 0;
-  width: var(--cg-lens-size);
-  height: var(--cg-lens-size);
-  margin-left: calc(var(--cg-lens-size) / -2);
-  margin-top: calc(var(--cg-lens-size) / -2);
+  inset: 0;
   z-index: -1;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.5s ease;
-  will-change: transform;
-}
-
-.cg-lens-grid {
-  position: absolute;
-  inset: 0;
   background-image:
-    linear-gradient(var(--cg-line-lens) 1px, transparent 1px),
-    linear-gradient(90deg, var(--cg-line-lens) 1px, transparent 1px);
+    linear-gradient(var(--cg-line-reveal) 1px, transparent 1px),
+    linear-gradient(90deg, var(--cg-line-reveal) 1px, transparent 1px);
   background-size: 48px 48px;
-  -webkit-mask-image: radial-gradient(circle, black 0%, transparent 68%);
-  mask-image: radial-gradient(circle, black 0%, transparent 68%);
-}
-
-.cg-lens-glow {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle,
-    var(--cg-glow) 0%,
-    transparent 62%
+  -webkit-mask-image: radial-gradient(
+    circle var(--cg-r) at var(--cg-x) var(--cg-y),
+    black 0%,
+    transparent 70%
+  );
+  mask-image: radial-gradient(
+    circle var(--cg-r) at var(--cg-x) var(--cg-y),
+    black 0%,
+    transparent 70%
   );
 }
 
 :root {
-  --cg-line-base: color-mix(in srgb, var(--primary) 5%, transparent);
-  --cg-line-lens: color-mix(in srgb, var(--primary) 11%, transparent);
-  --cg-glow: color-mix(in srgb, var(--primary) 8%, transparent);
-}
-
-/* Light theme: warmer, even fainter — never graph paper. */
-[data-theme="light"] {
   --cg-line-base: color-mix(in srgb, var(--primary) 4%, transparent);
-  --cg-line-lens: color-mix(in srgb, var(--primary) 8%, transparent);
-  --cg-glow: color-mix(in srgb, var(--primary) 6%, transparent);
+  --cg-line-reveal: color-mix(in srgb, var(--primary) 12%, transparent);
 }
 
-/* Tablet and below: smaller, calmer lens. Touch devices never mount
-   the lens at all (see CursorGrid pointer check). */
+/* Light theme: even fainter — never graph paper. */
+[data-theme="light"] {
+  --cg-line-base: color-mix(in srgb, var(--primary) 3%, transparent);
+  --cg-line-reveal: color-mix(in srgb, var(--primary) 9%, transparent);
+}
+
+/* Tablet and below: smaller, calmer reveal radius. Touch devices never
+   activate the reveal at all (see CursorGrid pointer check). */
 @media (max-width: 1024px) {
-  .cg-lens {
-    --cg-lens-size: 440px;
+  .cg-reveal {
+    --cg-r: 200px;
   }
 }
 

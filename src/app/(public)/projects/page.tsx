@@ -1,10 +1,17 @@
+import type { Metadata } from "next";
 import { projects } from "@/features/projects/project-data";
 import Link from "next/link";
 import { Reveal } from "@/components/ui/Reveal";
+import { canonicalAlternates, openGraphPage } from "@/lib/seo/site";
 
-export const metadata = {
-  title: "Projects — SKY BUILDS",
+export const metadata: Metadata = {
+  title: "Projects",
   description: "Explore our concept projects — NOVA (SaaS analytics), AURELIA (real estate), and PULSE (fitness e-commerce). Each demonstrates our approach to design, development, and motion.",
+  ...openGraphPage(
+    "Projects — SKY BUILDS",
+    "Concept projects exploring SaaS analytics, real estate, and e-commerce — NOVA, AURELIA, and PULSE."
+  ),
+  ...canonicalAlternates("/projects"),
 };
 
 export default function ProjectsPage() {
@@ -15,9 +22,9 @@ export default function ProjectsPage() {
       <header className="relative pt-32 md:pt-40 lg:pt-48 pb-16 md:pb-20">
         <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-10">
           <Reveal>
-            <p className="font-display text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-6">
+            <h1 className="font-display text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-6">
               Selected Work
-            </p>
+            </h1>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="max-w-2xl text-[1.125rem] leading-relaxed" style={{ color: "var(--text-muted)" }}>

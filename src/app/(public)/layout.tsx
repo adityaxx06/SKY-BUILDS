@@ -3,6 +3,7 @@ import { MotionConfig } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { Footer } from "@/components/layout/Footer";
+import { CursorGrid } from "@/components/effects/CursorGrid";
 
 export const metadata: Metadata = {
   title: "SKY BUILDS",
@@ -17,6 +18,7 @@ export default function PublicLayout({
 }) {
   return (
     <MotionConfig reducedMotion="user">
+      <CursorGrid />
       <Navbar />
       <div className="flex-1" id="main-content">
         <PageTransition>{children}</PageTransition>

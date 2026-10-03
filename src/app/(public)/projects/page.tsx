@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { projects } from "@/features/projects/project-data";
+import Image from "next/image";
 import Link from "next/link";
 import { Reveal } from "@/components/ui/Reveal";
 import { canonicalAlternates, openGraphPage } from "@/lib/seo/site";
+import { getPublishedProjects } from "@/lib/projects/get-projects";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -14,8 +15,8 @@ export const metadata: Metadata = {
   ...canonicalAlternates("/projects"),
 };
 
-export default function ProjectsPage() {
-  const sortedProjects = [...projects].sort((a, b) => a.displayOrder - b.displayOrder);
+export default async function ProjectsPage() {
+  const { projects: sortedProjects } = await getPublishedProjects();
 
   return (
     <>
@@ -55,10 +56,21 @@ export default function ProjectsPage() {
                   style={{ borderColor: "var(--border)", background: "var(--surface)" }}
                 >
                   <div className="relative aspect-[4/3] overflow-hidden">
-                    <div
-                      className="absolute inset-0 transition-transform duration-700 group-hover:scale-105"
-                      style={{ background: project.visualTheme === "analytical" ? "linear-gradient(135deg, rgba(91,120,255,0.15), rgba(255,93,162,0.1))" : project.visualTheme === "editorial" ? "linear-gradient(135deg, rgba(255,93,162,0.1), rgba(255,193,92,0.1))" : "linear-gradient(135deg, rgba(255,93,162,0.15), rgba(255,193,92,0.15))" }}
-                    />
+                    {project.coverImage ? (
+                      <Image
+                        src={project.coverImage}
+                        alt={`${project.title} cover image`}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, (max-width: 1320px) 33vw, 400px"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div
+                        className="absolute inset-0 transition-transform duration-700 group-hover:scale-105"
+                        style={{ background: project.visualTheme === "analytical" ? "linear-gradient(135deg, rgba(91,120,255,0.15), rgba(255,93,162,0.1))" : project.visualTheme === "editorial" ? "linear-gradient(135deg, rgba(255,93,162,0.1), rgba(255,193,92,0.1))" : "linear-gradient(135deg, rgba(255,93,162,0.15), rgba(255,193,92,0.15))" }}
+                      />
+                    )}
                     <div className="absolute inset-0 opacity-5" style={{ background: "url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%235B78FF\" fill-opacity=\"0.1\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')" }} />
                     <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between p-4">
                       <span className="px-3 py-1.5 rounded-full border text-[0.7rem] font-medium uppercase tracking-wider" style={{ background: "var(--glass-bg)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", borderColor: "var(--glass-border)", color: "var(--accent)" }}>

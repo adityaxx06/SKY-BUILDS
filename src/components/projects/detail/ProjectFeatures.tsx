@@ -55,16 +55,21 @@ export function ProjectFeatures({ project }: { project: Project }) {
       </Reveal>
       <Reveal delay={0.1}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {project.features.map((feature) => (
+          {project.features.map((feature, i) => (
             <div
               key={feature}
               className="p-6 rounded-[18px] border transition-all duration-300 hover:-translate-y-1"
               style={{ borderColor: "var(--border)", background: "var(--surface)" }}
             >
-              <div className="w-10 h-10 rounded-xl mb-4 flex items-center justify-center" style={{ background: "var(--primary)", color: "var(--on-primary)" }}>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+              <div className="mb-4 flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--primary)", color: "var(--on-primary)" }}>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="font-display text-sm font-semibold" style={{ color: "var(--text-muted)" }}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
               </div>
               <p className="text-[1rem] leading-relaxed" style={{ color: "var(--text)" }}>
                 {feature}

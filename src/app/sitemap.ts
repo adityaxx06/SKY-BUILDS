@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { projects } from "@/features/projects/project-data";
+import { getPublishedProjects } from "@/lib/projects/get-projects";
 import { getSiteUrl } from "@/lib/seo/site";
 
 /**
@@ -10,9 +10,11 @@ import { getSiteUrl } from "@/lib/seo/site";
  * Returns an empty sitemap when NEXT_PUBLIC_SITE_URL is unset rather
  * than publishing guessed absolute URLs.
  */
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();
   if (!siteUrl) return [];
+
+  const { projects } = await getPublishedProjects();
 
   const now = new Date();
   const statics: MetadataRoute.Sitemap = [

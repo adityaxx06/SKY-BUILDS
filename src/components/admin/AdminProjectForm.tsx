@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { AdminInput } from "./AdminInput";
 import { AdminSelect } from "./AdminSelect";
 import { AdminTextarea } from "./AdminTextarea";
+import { AdminImageManager, type ManagedImage } from "./AdminImageManager";
 
 interface AdminProjectFormProps {
   mode: "create" | "edit";
@@ -17,13 +18,17 @@ interface AdminProjectFormProps {
     category: string;
     short_description: string;
     description: string;
+    overview: string;
+    features: string;
+    images: ManagedImage[];
     year: string;
     services: string;
     technologies: string;
-    hero_image: string;
     challenge: string;
     solution: string;
     result_summary: string;
+    mockup_type: string;
+    visual_theme: string;
     featured: string;
     display_order: string;
   };
@@ -32,6 +37,18 @@ interface AdminProjectFormProps {
 const FEATURED_OPTIONS = [
   { value: "true", label: "Yes" },
   { value: "false", label: "No" },
+];
+
+const MOCKUP_OPTIONS = [
+  { value: "browser", label: "Browser" },
+  { value: "devices", label: "Devices" },
+  { value: "dashboard", label: "Dashboard" },
+];
+
+const THEME_OPTIONS = [
+  { value: "analytical", label: "Analytical" },
+  { value: "editorial", label: "Editorial" },
+  { value: "energetic", label: "Energetic" },
 ];
 
 export function AdminProjectForm({ mode, initialData }: AdminProjectFormProps) {
@@ -48,16 +65,34 @@ export function AdminProjectForm({ mode, initialData }: AdminProjectFormProps) {
     const category = formData.get("category") as string;
     const year = formData.get("year") as string;
     const display_order = formData.get("display_order") as string;
+    const mockup_type = formData.get("mockup_type") as string;
+    const visual_theme = formData.get("visual_theme") as string;
+    const features = formData.get("features") as string;
     if (!title?.trim()) errs.title = "Title is required";
     if (!slug?.trim()) errs.slug = "Slug is required";
     if (!category?.trim()) errs.category = "Category is required";
     if (year && isNaN(Number(year))) errs.year = "Year must be a number";
     if (display_order && isNaN(Number(display_order))) errs.display_order = "Display order must be a number";
+    if (mockup_type && !MOCKUP_OPTIONS.some((o) => o.value === mockup_type)) {
+      errs.mockup_type = "Invalid visual type";
+    }
+    if (visual_theme && !THEME_OPTIONS.some((o) => o.value === visual_theme)) {
+      errs.visual_theme = "Invalid visual theme";
+    }
+    if (features) {
+      const lines = features.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+      if (lines.length > 30) errs.features = "Keep features to 30 items or fewer";
+      else if (lines.some((l) => l.length > 300)) errs.features = "Each feature must be 300 characters or fewer";
+    }
     return errs;
   };
 
   const handleSubmit = async (formData: FormData) => {
     setSubmitError(null);
+    if (formData.get("images_pending") === "1") {
+      setSubmitError("Please wait for image uploads to finish before saving");
+      return;
+    }
     const errs = validateForm(formData);
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
@@ -118,6 +153,26 @@ export function AdminProjectForm({ mode, initialData }: AdminProjectFormProps) {
           </div>
 
           <div className="mt-6">
+            <h3 className="font-display text-lg font-semibold mb-4" style={{ color: "var(--text)" }}>Case Study Content</h3>
+            <div className="space-y-4">
+              <AdminTextarea label="Overview" name="overview" defaultValue={initialData?.overview} rows={4} placeholder="Long-form introduction shown on the project detail page" />
+              <AdminTextarea label="Features (one per line)" name="features" defaultValue={initialData?.features} error={errors.features} rows={5} placeholder={"Real-time metric cards\nResponsive layouts\nKeyboard-first navigation"} />
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <h3 className="font-display text-lg font-semibold mb-4" style={{ color: "var(--text)" }}>Public Visuals</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <AdminSelect label="Visual Type" name="mockup_type" defaultValue={initialData?.mockup_type || "browser"} error={errors.mockup_type} className="w-full">
+                {MOCKUP_OPTIONS.map((opt) => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+              </AdminSelect>
+              <AdminSelect label="Visual Theme" name="visual_theme" defaultValue={initialData?.visual_theme || "analytical"} error={errors.visual_theme} className="w-full">
+                {THEME_OPTIONS.map((opt) => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+              </AdminSelect>
+            </div>
+          </div>
+
+          <div className="mt-6">
             <h3 className="font-display text-lg font-semibold mb-4" style={{ color: "var(--text)" }}>Challenge / Solution / Result</h3>
             <div className="space-y-4">
               <AdminTextarea label="Challenge" name="challenge" defaultValue={initialData?.challenge} rows={4} placeholder="What problem did this work solve?" />
@@ -127,11 +182,18 @@ export function AdminProjectForm({ mode, initialData }: AdminProjectFormProps) {
           </div>
 
           <div className="mt-6">
+            <h3 className="font-display text-lg font-semibold mb-4" style={{ color: "var(--text)" }}>Project Images</h3>
+            <AdminImageManager
+              initialImages={initialData?.images || []}
+              prefix={initialData?.slug || "tmp"}
+            />
+          </div>
+
+          <div className="mt-6">
             <h3 className="font-display text-lg font-semibold mb-4" style={{ color: "var(--text)" }}>Technical Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <AdminInput label="Services (comma-separated)" name="services" defaultValue={initialData?.services} placeholder="Web Design, UI/UX, Development" />
               <AdminInput label="Technologies (comma-separated)" name="technologies" defaultValue={initialData?.technologies} placeholder="React, Next.js, TypeScript, Tailwind" />
-              <AdminInput label="Hero Image URL" name="hero_image" type="url" defaultValue={initialData?.hero_image} placeholder="https://example.com/hero.jpg" />
             </div>
           </div>
 

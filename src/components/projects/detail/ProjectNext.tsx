@@ -43,10 +43,7 @@ export function ProjectNext({ currentProject, allProjects }: ProjectNextProps) {
             </p>
             <Link
               href={`/projects/${nextProject.slug}`}
-              className="inline-flex items-center gap-2 rounded-full border px-6 py-3 text-[1rem] font-medium transition-all duration-300"
-              style={{ borderColor: "var(--primary)", color: "var(--primary)" }}
-              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--primary)"; e.currentTarget.style.color = "var(--on-primary)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "var(--primary)"; }}
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--primary)] px-6 py-3 text-[1rem] font-medium text-[var(--primary)] transition-all duration-300 hover:bg-[var(--primary)] hover:text-[var(--on-primary)]"
             >
               View Project
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

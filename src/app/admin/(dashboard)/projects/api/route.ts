@@ -54,12 +54,15 @@ export async function POST(request: NextRequest) {
   const year = formData.get("year") as string;
   const services = formData.get("services") as string;
   const technologies = formData.get("technologies") as string;
-  const hero_image = formData.get("hero_image") as string;
   const challenge = formData.get("challenge") as string;
   const solution = formData.get("solution") as string;
   const result_summary = formData.get("result_summary") as string;
   const featured = formData.get("featured") as string;
   const display_order = formData.get("display_order") as string;
+  const overview = formData.get("overview") as string;
+  const featuresRaw = formData.get("features") as string;
+  const mockup_type = formData.get("mockup_type") as string;
+  const visual_theme = formData.get("visual_theme") as string;
 
   if (!title?.trim()) return NextResponse.json({ success: false, error: "Title is required" }, { status: 400 });
   if (!slug?.trim()) return NextResponse.json({ success: false, error: "Slug is required" }, { status: 400 });
@@ -67,9 +70,78 @@ export async function POST(request: NextRequest) {
   if (year && isNaN(Number(year))) return NextResponse.json({ success: false, error: "Year must be a number" }, { status: 400 });
   if (display_order && isNaN(Number(display_order))) return NextResponse.json({ success: false, error: "Display order must be a number" }, { status: 400 });
 
+  const VALID_MOCKUPS = ["browser", "devices", "dashboard"];
+  const VALID_THEMES = ["analytical", "editorial", "energetic"];
+  if (mockup_type && !VALID_MOCKUPS.includes(mockup_type)) {
+    return NextResponse.json({ success: false, error: "Invalid visual type" }, { status: 400 });
+  }
+  if (visual_theme && !VALID_THEMES.includes(visual_theme)) {
+    return NextResponse.json({ success: false, error: "Invalid visual theme" }, { status: 400 });
+  }
+  const features = featuresRaw
+    ? featuresRaw.split(/\r?\n/).map((f) => f.trim()).filter(Boolean).slice(0, 30)
+    : [];
+  if (features.some((f) => f.length > 300)) {
+    return NextResponse.json({ success: false, error: "Each feature must be 300 characters or fewer" }, { status: 400 });
+  }
+
+  // Gallery images managed by AdminImageManager (JSON "images" hidden input).
+  // Only https URLs are accepted; hero_image always mirrors the first image.
+  let images: { url: string; alt: string }[] = [];
+  const imagesRaw = formData.get("images") as string;
+  if (imagesRaw) {
+    try {
+      const parsed: unknown = JSON.parse(imagesRaw);
+      if (!Array.isArray(parsed)) throw new Error("invalid");
+      images = parsed
+        .filter(
+          (entry): entry is { url: string; alt?: string } =>
+            typeof entry === "object" &&
+            entry !== null &&
+            typeof (entry as { url?: unknown }).url === "string"
+        )
+        .map((entry) => ({
+          url: (entry as { url: string }).url.trim(),
+          alt:
+            typeof entry.alt === "string" ? entry.alt.trim().slice(0, 200) : "",
+        }))
+        .filter((entry) => {
+          if (!/^https:\/\/.{1,2000}$/.test(entry.url)) return false;
+          try {
+            const host = new URL(entry.url).hostname.toLowerCase();
+            return host.endsWith(".supabase.co") || host === "supabase.co";
+          } catch {
+            return false;
+          }
+        })
+        .slice(0, 20);
+    } catch {
+      return NextResponse.json({ success: false, error: "Invalid image data" }, { status: 400 });
+    }
+  }
+  const hero_image = images[0]?.url || null;
+
   const supabase = await createServerSupabaseAdminClient();
 
+  // Public routes render from Supabase now: revalidate every public
+  // consumer after any mutation (admin paths keep existing behavior).
+  const revalidatePublic = (slugs: (string | null | undefined)[]) => {
+    revalidatePath("/");
+    revalidatePath("/projects");
+    revalidatePath("/sitemap.xml");
+    for (const s of new Set(slugs.filter(Boolean) as string[])) {
+      revalidatePath(`/projects/${s}`);
+    }
+  };
+
   if (id) {
+    const { data: existing } = await supabase
+      .from("projects")
+      .select("slug")
+      .eq("id", id)
+      .maybeSingle();
+    const oldSlug = (existing as { slug?: string } | null)?.slug || null;
+
     const { error } = await supabase
       .from("projects")
       .update({
@@ -78,10 +150,15 @@ export async function POST(request: NextRequest) {
         category: category.trim(),
         short_description: short_description?.trim() || null,
         description: description?.trim() || null,
+        overview: overview?.trim() || null,
+        features,
+        images,
+        mockup_type: mockup_type || "browser",
+        visual_theme: visual_theme || "analytical",
         year: year ? Number(year) : null,
         services: services ? services.split(",").map(s => s.trim()).filter(Boolean) : [],
         technologies: technologies ? technologies.split(",").map(t => t.trim()).filter(Boolean) : [],
-        hero_image: hero_image?.trim() || null,
+        hero_image,
         challenge: challenge?.trim() || null,
         solution: solution?.trim() || null,
         result_summary: result_summary?.trim() || null,
@@ -98,6 +175,7 @@ export async function POST(request: NextRequest) {
 
     revalidatePath("/admin/projects");
     revalidatePath(`/admin/projects/${id}`);
+    revalidatePublic([oldSlug, slug.trim()]);
     return NextResponse.json({ success: true, id });
   }
 
@@ -109,6 +187,10 @@ export async function POST(request: NextRequest) {
       category: category.trim(),
       short_description: short_description?.trim() || null,
       description: description?.trim() || null,
+      overview: overview?.trim() || null,
+      features,
+      mockup_type: mockup_type || "browser",
+      visual_theme: visual_theme || "analytical",
       year: year ? Number(year) : null,
       services: services ? services.split(",").map(s => s.trim()).filter(Boolean) : [],
       technologies: technologies ? technologies.split(",").map(t => t.trim()).filter(Boolean) : [],
@@ -128,5 +210,6 @@ export async function POST(request: NextRequest) {
   }
 
   revalidatePath("/admin/projects");
+  revalidatePublic([slug.trim()]);
   return NextResponse.json({ success: true, id: project.id });
 }

@@ -15,6 +15,11 @@ export type ProjectGalleryItem = {
   description?: string;
 };
 
+export type ProjectImage = {
+  url: string;
+  alt: string;
+};
+
 export type Project = {
   id: string;
   title: string;
@@ -33,6 +38,12 @@ export type Project = {
   gallery: ProjectGalleryItem[];
   visualTheme: "analytical" | "editorial" | "energetic";
   services: string[];
+  /** Real uploaded photos (DB `images` column). Absent on legacy static rows. */
+  images?: ProjectImage[];
+  /** Cover photo URL (DB `hero_image`, else first image). Absent on legacy rows. */
+  coverImage?: string | null;
+  /** Whether `gallery` came from stored data vs the generic default. */
+  gallerySource?: "stored" | "default";
 };
 
 export const projects: Project[] = [

@@ -1,11 +1,14 @@
 import { Reveal } from "@/components/ui/Reveal";
 import { Container } from "@/components/ui/Container";
 import { ProjectCard } from "@/components/projects/ProjectCard";
-import { projects } from "@/features/projects/project-data";
+import { getPublishedProjects } from "@/lib/projects/get-projects";
 
-export function SelectedWork() {
+export async function SelectedWork() {
+  const { projects } = await getPublishedProjects();
   const sorted = [...projects].sort((a, b) => a.displayOrder - b.displayOrder);
   const [featured, ...rest] = sorted;
+
+  if (!featured) return null;
 
   return (
     <Container as="section" id="work" className="py-24 scroll-mt-20">

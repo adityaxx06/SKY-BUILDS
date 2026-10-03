@@ -26,6 +26,7 @@ interface Project {
   display_order: number;
   created_at: string;
   updated_at: string;
+  images?: { url: string; alt?: string }[] | null;
 }
 
 interface AdminProjectDetailProps {
@@ -175,6 +176,34 @@ export function AdminProjectDetail({ project }: AdminProjectDetailProps) {
               <div className="rounded-[18px] border p-6" style={{ borderColor: "var(--border)", background: "var(--surface)" }}>
                 <h2 className="font-display text-lg font-semibold mb-4" style={{ color: "var(--text)" }}>Result Summary</h2>
                 <div style={{ color: "var(--text-muted)" }}><p className="whitespace-pre-wrap">{project.result_summary}</p></div>
+              </div>
+            )}
+            {project.images && project.images.length > 0 && (
+              <div className="rounded-[18px] border p-6" style={{ borderColor: "var(--border)", background: "var(--surface)" }}>
+                <h2 className="font-display text-lg font-semibold mb-4" style={{ color: "var(--text)" }}>
+                  Images ({project.images.length})
+                </h2>
+                <ul className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                  {project.images.map((img, i) => (
+                    <li key={`${img.url}-${i}`} className="relative aspect-square overflow-hidden rounded-xl border" style={{ borderColor: "var(--border)" }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={img.url}
+                        alt={img.alt || `${project.title} image ${i + 1}`}
+                        className="absolute inset-0 h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                      {i === 0 && (
+                        <span
+                          className="absolute left-1.5 top-1.5 rounded-full px-2 py-0.5 text-[0.625rem] font-semibold"
+                          style={{ background: "var(--primary)", color: "var(--on-primary)" }}
+                        >
+                          Cover
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
           </div>

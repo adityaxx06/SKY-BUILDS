@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Project } from "@/features/projects/project-data";
 import { BrowserMockup, DevicesMockup, DashboardMockup } from "./mockups";
 
@@ -35,7 +36,20 @@ export function ProjectCard({ project, large = false }: { project: Project; larg
           ↗
         </span>
         <div className="w-full transition-transform duration-500 group-hover:scale-[1.035] group-hover:-rotate-[0.4deg]">
-          <Mockup />
+          {project.coverImage ? (
+            <span className="relative block w-full overflow-hidden rounded-xl aspect-[16/10]">
+              <Image
+                src={project.coverImage}
+                alt={`${project.title} cover image`}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1320px) 50vw, 640px"
+                className="object-cover"
+                loading="lazy"
+              />
+            </span>
+          ) : (
+            <Mockup />
+          )}
         </div>
       </div>
       <div className="border-t px-5 py-4" style={{ borderColor: "var(--border)" }}>

@@ -14,6 +14,12 @@ export interface Project {
   category: string;
   short_description: string | null;
   description: string | null;
+  overview: string | null;
+  features: unknown;
+  gallery: unknown;
+  images: { url: string; alt?: string }[] | null;
+  mockup_type: string;
+  visual_theme: string;
   year: number | null;
   services: string[] | null;
   technologies: string[] | null;

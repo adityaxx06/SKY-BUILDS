@@ -1,9 +1,16 @@
-import { projects, Project } from "@/features/projects/project-data";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
+import type { Project } from "@/features/projects/project-data";
+import { BrowserMockup, DevicesMockup, DashboardMockup } from "@/components/projects/mockups";
 import { canonicalAlternates, openGraphPage } from "@/lib/seo/site";
-import { ProjectBackNav, ProjectHero, ProjectMeta, ProjectOverview, ProjectFeatures, ProjectServices, ProjectNext } from "@/components/projects/detail";
+import {
+  getPublishedProjectBySlug,
+  getPublishedProjects,
+} from "@/lib/projects/get-projects";
+import { ProjectBackNav, ProjectHero, ProjectOverview, ProjectFeatures, ProjectServices, ProjectNext } from "@/components/projects/detail";
+import { ProjectShowcase } from "@/components/projects/detail/ProjectShowcase";
+import { CTA } from "@/components/sections/CTA";
 import { NovaBrowserMockup, NovaDashboardMockup, NovaPanelMockup, NovaTypographyMockup } from "@/components/projects/nova-visuals";
 import { AureliaBrowserMockup, AureliaDevicesMockup, AureliaPanelMockup, AureliaTypographyMockup } from "@/components/projects/aurelia-visuals";
 import { PulseBrowserMockup, PulseDashboardMockup, PulsePanelMockup, PulseTypographyMockup } from "@/components/projects/pulse-visuals";
@@ -14,13 +21,24 @@ const MOCKUP_COMPONENTS: Record<string, Record<string, React.ComponentType>> = {
   pulse: { browser: PulseBrowserMockup, dashboard: PulseDashboardMockup, panel: PulsePanelMockup, typography: PulseTypographyMockup },
 };
 
-function getProject(slug: string): Project | undefined {
-  return projects.find((p) => p.slug === slug);
+/**
+ * Generic visual set for admin-created work without a bespoke gallery
+ * composition. Gallery item types without a generic component render
+ * nothing (the existing `if (!Mockup) return null` guard below).
+ */
+const GENERIC_MOCKUPS: Record<string, React.ComponentType> = {
+  browser: BrowserMockup,
+  devices: DevicesMockup,
+  dashboard: DashboardMockup,
+};
+
+function getMockups(slug: string): Record<string, React.ComponentType> {
+  return MOCKUP_COMPONENTS[slug] || GENERIC_MOCKUPS;
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProject(slug);
+  const { project } = await getPublishedProjectBySlug(slug);
   if (!project) return { title: "Project Not Found — SKY BUILDS" };
 
   return {
@@ -35,7 +53,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 function ProjectVisualGallery({ project }: { project: Project }) {
-  const mockups = MOCKUP_COMPONENTS[project.id] || {};
+  const mockups = getMockups(project.slug);
 
   return (
     <section aria-label="Project visual gallery" className="py-16 md:py-24">
@@ -73,24 +91,32 @@ function ProjectVisualGallery({ project }: { project: Project }) {
 
 export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const project = getProject(slug);
+  const { project } = await getPublishedProjectBySlug(slug);
   if (!project) notFound();
 
-  const allProjects = [...projects].sort((a, b) => a.displayOrder - b.displayOrder);
+  const { projects: allProjects } = await getPublishedProjects();
+  const realImages = project.images || [];
+  // Bespoke stored compositions always render; the generic default only
+  // renders when there are no real photos (no redundancy, no gaps).
+  const showMockupGallery =
+    project.gallerySource === "stored" || realImages.length === 0;
 
   return (
     <>
       <div className="min-h-screen pt-32 md:pt-40" style={{ background: "var(--bg)" }}>
-        <ProjectBackNav />
-        <ProjectHero project={project} />
-        <ProjectMeta project={project} />
         <Container>
-          <ProjectVisualGallery project={project} />
+          <ProjectBackNav />
+          <ProjectHero project={project} />
+          {realImages.length > 0 && (
+            <ProjectShowcase images={realImages} projectTitle={project.title} />
+          )}
+          {showMockupGallery && <ProjectVisualGallery project={project} />}
           <ProjectOverview project={project} />
           <ProjectFeatures project={project} />
           <ProjectServices project={project} />
           <ProjectNext currentProject={project} allProjects={allProjects} />
         </Container>
+        <CTA />
       </div>
     </>
   );

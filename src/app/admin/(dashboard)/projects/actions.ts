@@ -14,6 +14,13 @@ export async function deleteProjectAction(formData: FormData): Promise<{ success
 
   const supabase = await createServerSupabaseAdminClient();
 
+  const { data: existing } = await supabase
+    .from("projects")
+    .select("slug")
+    .eq("id", id)
+    .maybeSingle();
+  const oldSlug = (existing as { slug?: string } | null)?.slug || null;
+
   const { error } = await supabase.from("projects").delete().eq("id", id);
 
   if (error) {
@@ -22,5 +29,9 @@ export async function deleteProjectAction(formData: FormData): Promise<{ success
   }
 
   revalidatePath("/admin/projects");
+  revalidatePath("/");
+  revalidatePath("/projects");
+  revalidatePath("/sitemap.xml");
+  if (oldSlug) revalidatePath(`/projects/${oldSlug}`);
   return { success: true };
 }
